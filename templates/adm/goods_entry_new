@@ -1,0 +1,117 @@
+{{define "goods_admin"}}
+<section class="standart">
+  <div class="form-inline">
+    <form id="goods_entry_new" name="goods_entry_new" >
+      <table>
+	<tr>
+	  <td><h2>Product Basics</h2></td>
+	  <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	  <td><h2>Product Details</h2></td>
+	</tr>
+	<tr>
+	    <td>
+	      <div class="field">
+	       <label><span class="required">*</span> Code:</label>
+	       <input type="text" value="" name="Code">
+	      </div>
+	    </td>
+	    <td>&nbsp;&nbsp;</td>
+	    <td>
+	      <div class="field">
+		  <label>Details File Path:</label>
+		  <input type="text" value="" name="Deets[DescDetails]">
+	      </div>
+	    </td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	    <label><span class="required">*</span> Category:</label>
+	    <input type="text" value="" name="Category">
+	    </div></td>
+	    <td>&nbsp;&nbsp;</td>
+	    <td><div class="field">
+		<label><span class="required">*</span> Small Image Url:</label>
+		<input type="text" value="" name="Deets[UrlImgs1]">
+	    </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Subcategory:</label>
+	      <input type="text" value="" name="Subcategory">
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Spec Doc Url:</label>
+	      <input type="text" value="" name="Deets[UrlFile]">
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Brand:</label>
+	      <input type="text" value="" name="Brand">
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required" >*</span> Image URL:</label>
+	      <input type="text" value="" name="Urlmg">
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Description: </label>
+	      <input type="text" value="" name="Desc">
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required">*</span> URL:</label>
+	      <input type="text" value="" name="Url">
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	    <label><span class="required">*</span> Price:</label>
+	    <input type="text" value="" name="Price">
+	    <label><span class="required" style="display: none;">*</span> Stock:</label>
+	    <input type="text" value="" name="Deets[Stock]">
+            </div>
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td>
+	    <div class="field">
+	      <label><span class="required">*</span>Featured:</label>
+	      <input type="radio" checked="checked" value="true" name="featured">
+		  Yes&nbsp;&nbsp;
+	      <input type="radio" value="false" name="Featured">
+		  No &nbsp;&nbsp;                       
+	    </div>
+	    <div class="field">
+	      <label><span class="required">*</span>Hidden:</label>
+	      <input type="radio" checked="checked" value="true" name="hidden">
+		  Yes&nbsp;&nbsp;
+	      <input type="radio" value="false" name="Hidden">
+		  No &nbsp;&nbsp;                       
+	    </div>
+	  </td>
+	</tr>
+	<tr>
+	  <td>  
+	    <h2>Your Password</h2>
+	    <div class="field">
+	      <label><span class="required">*</span> Password:</label>
+	      <input type="password" value="" name="password">
+	    </div>
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	    <a onclick="$(this).parents('form').submit();" class="button button-alt" >Continue</a> </div></td>
+	  <td>
+	</tr>
+      </table> 
+    </form>
+  </div>
+</section>
+{{end}}
+
+{{define "goods_entry_success"}}
+Product successfully added
+{{end}}

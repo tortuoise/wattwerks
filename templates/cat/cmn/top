@@ -1,0 +1,11 @@
+{{define "top"}}
+    <div class="ribbon breadcrumb">
+	<div class="pivot">
+	    <div class="center">
+	      <a href="/goods/front">Home</a>
+	      <span> > </span><a href="/goods/{{.Ctgry}}">{{.Ctgry}}</a>
+	      <span> > </span><a href="/goods/{{.Ctgry}}/{{.Sctgry}}">{{.Sctgry}}</a>
+	    </div>
+	</div>
+    </div>
+{{end}}

@@ -1,0 +1,123 @@
+{{define "goods_admin"}}
+<section class="standart">
+  <div class="form-inline">
+    <form id="product_edit" name="product_edit" action="/admin/goods/edit/{{.This.Id}}" method="POST" >
+      <table>
+	<tr>
+	  <td><h2>Product Basics</h2></td>
+	  <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	  <td><h2>Product Details</h2></td>
+	</tr>
+	<tr>
+	    <td>
+	      <div class="field">
+	        <label><span class="required">*</span> Code:</label>
+		  <input type="text" name="code" value="{{.This.Code}}" >
+	      </div>
+		  <input type="hidden" name="Id" value="{{.This.Id}}" >
+	    </td>
+	    <td>&nbsp;&nbsp;</td>
+	    <td>
+	      <div class="field">
+		  <label>Details File Path:</label>
+		  <input type="text" value="{{.This.Deets.DescDetails}}" name="descDetails">
+	      </div>
+	    </td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	    <label><span class="required">*</span> Category:</label>
+		  <input type="text" name="category" value="{{.This.Category}}" >
+	    </div></td>
+	    <td>&nbsp;&nbsp;</td>
+	    <td><div class="field">
+		<label><span class="required">*</span> Small Image Url:</label>
+		<input type="text" value="{{.This.Deets.UrlImgs1}}" name="urlImgs">
+	    </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Subcategory:</label>
+		  <input type="text" name="subcategory" value="{{.This.Subcategory}}" >
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Spec Doc Url:</label>
+		  <input type="text" name="urlFile" value="{{.This.Deets.UrlFile}}" >
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Brand:</label>
+		  <input type="text" name="brand" value="{{.This.Brand}}" >
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required" >*</span> Image URL:</label>
+		  <input type="text" name="urlImg" value="{{.This.Urlimg}}" >
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Description: </label>
+	      <input type="text" value="{{.This.Desc}}" name="desc">
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required">*</span> URL:</label>
+	      <input type="text" value="{{.This.Url}}" name="url">
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	    <label><span class="required">*</span> Price:</label>
+	      <input type="text" value="{{.This.Price}}" name="price">
+	    <label><span class="required" style="display: none;">*</span> Stock:</label>
+	      <input type="text" value="{{.This.Deets.Stock}}" name="stock">
+            </div>
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td>
+	    <div class="field">
+	      <label><span class="required">*</span>Featured:</label>
+		<input type="radio" value="{{.This.Featured}}" name="featured" {{if .This.Featured}} checked="checked" {{else}} checked="unchecked" {{end}}>
+	    </div>
+	    <div class="field">
+	      <label><span class="required">*</span>Hidden:</label>
+		<input type="radio" value="{{.This.Hidden}}" name="hidden" {{if .This.Hidden}} checked="checked" {{else}} checked="unchecked" {{end}}>
+	    </div>
+	  </td>
+	</tr>
+	<tr>
+	  <td>  
+	    <h2>Your Password</h2>
+	    <div class="field">
+	      <label><span class="required">*</span> Password:</label>
+	      <input type="password" value="" name="password">
+	    </div>
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	    <input type="submit" class="button button-alt" >Update</a> </div></td>
+	  <td>
+	</tr>
+      </table> 
+    </form>
+  </div>
+
+  <h2> Delete Product </h2> 
+  <form id="product_delete" name="product_delete">
+    <div class="field">
+      <label> Product ID: </label>
+      <input type="text" name="id" value="{{.This.Id}}">
+    </div>
+    <div class="field">
+      <a onclick="$(this).parents('form').submit();" class="button button-alt" >Delete</a>
+    </div>
+  </form>
+</section>
+{{end}}
+
+{{define "goods_edit_success"}}
+Product successfully edited
+{{end}}

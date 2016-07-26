@@ -1,0 +1,54 @@
+package main
+
+import (
+	"fmt"
+	"github.com/gorilla/sessions"
+	"github.com/gorilla/mux"
+	"io"
+	"log"
+	"net/http"
+)
+
+var store = sessions.NewCookieStore([]byte("wattwerks_cookies_secret"))
+
+func MyHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := store.Get(r, "wattwerks_cookies")
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	session.Values["foo"] = "bar"
+	session.Values[42] = 43
+	session.Save(r, w)
+	io.WriteString(w, "HELLO")
+}
+
+func SessionStore(w http.ResponseWriter, r *http.Request) {
+	session, err := store.Get(r, "wattwerks_cookies")
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	val := session.Values["foo"]
+	fmt.Println(val.(string))
+	//val = session.Values[42]
+	//fmt.Println(val.(int))
+	//var boo string
+	//if boo, ok := val.(string); !ok {
+	//	fmt.Println(boo, "There's a problem")
+	//}
+	io.WriteString(w, val.(string))
+}
+
+func main() {
+	r := mux.NewRouter()
+	r.HandleFunc("/", MyHandler)
+	r.HandleFunc("/session", SessionStore)
+	http.Handle("/", r)
+	err := http.ListenAndServe(":8080", nil ) //context.ClearHandler(http.DefaultServeMux))
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
+}
+

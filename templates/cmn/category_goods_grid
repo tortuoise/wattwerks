@@ -1,0 +1,19 @@
+	<div class="wrap">
+	  <div style="background-color: rgb(250, 250, 250);" class="struct">
+            <div style="border-color: rgb(235, 235, 235);" class="frame">
+	      <div class="image">
+              </div>
+	      <div class="name">
+		<div class="desc">
+		</div>
+	      </div>
+	      <div class="price">Rs.
+	      <!--<div class="buttons">-->
+		<a class="button button-alt" onclick="addToCart(
+                   );">Add to Cart</a>
+	      <!--</div>-->
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	  

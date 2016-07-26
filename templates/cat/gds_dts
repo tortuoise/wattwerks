@@ -1,0 +1,116 @@
+{{define "goods_view"}}
+	  <h1 itemprop="name">{{.Gd.Brand}} &nbsp;&nbsp;  {{.Gd.Desc}}
+          </h1>
+	  <section class="product-info">
+	    <div class="left">
+	      <div class="image-additional">
+	      </div>
+	    </div>
+            <!--<script type="text/javascript">
+              $('.colorbox').colorbox({overlayClose: true});
+            </script>-->
+	      
+	    <div class="right">
+	      <div class="description">
+		 <input type="hidden" id="available_quantity" value="1" />
+		 <ul>
+		   <li>Product Code: {{.Gd.Code}}
+                      <span id="code" type="hidden">
+                      </span>
+                    </li>
+		   <li>Availability:{{.Gd.Deets.Stock}} 
+                   </li>
+		</ul>
+		 <br><br><br>
+		<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="price">
+		  <div itemprop="price" class="price-default" style="color:#008BCB">
+                    Rs.{{.Gd.Price}}
+                  </div>
+		  <div class="price-add">
+		     <br /><!--30 or more Rs.1,299.00--><br />
+		  </div>
+		</div>
+	      </div>
+	      <div class="cart">
+		<input type="hidden" name="product_id" id="product_id" size="2"  />
+                  <!-- value="241" />  -->
+		  Quantity:<input type="text" name="quantity" value="1" id="selected_quantity" autocomplete="off" />
+                    <a href="/account/cart/add/{{.Gd.Id}}" class="button button-alt">Add to Cart</a><br/><br/>
+                <!--  <a href="" class="button-icon" onclick="addToWishList('241'); return false;"><span class="icon icon-wish"></span>Add to Wish List</a><a href="" class="button-icon" onclick="addToCompare('241'); return false;"><span class="icon icon-compare"></span>Add to Compare</a>-->
+	      </div>
+
+	      <div class="review">
+	      </div>
+	    </div>
+	  </section>
+	  <div id="tabs" class="tabs">
+	    <a href="#tab-description">Description</a>
+            <!--REVIEWTAB-->
+	    <!--<a href="#tab-review">Reviews (0)</a>-->
+	    <a href="#tab-tags">Docs</a>            
+	  </div>
+	  <div id="tab-description" class="typography product-description">
+	  </div>
+	  <div id="tab-review" class="product-reviews">
+	    <div id="review">
+            <!--REVIEWS-->
+            </br>
+            </div>
+	    <div class="form-inline">
+		<h2 id="review-title">Write a review</h2>
+		<div class="field">
+		    <label>Your Name:</label>
+		    <input type="text" id="name" name="name" value="" />
+		</div>
+		<div class="field">
+		    <label>Your Review:</label>
+		    <textarea name="text" id="review" rows="5" style="width: 90%;"></textarea>
+		    <span style="font-size: 11px;"><span style="color: #FF0000;">Note:</span> HTML is not translated!</span>
+		</div>
+		<div class="field">
+		    <label>Rating:</label>
+		    Bad &nbsp;
+		    <input type="radio" name="rating" value="1" /> &nbsp;
+		    <input type="radio" name="rating" value="2" /> &nbsp;
+		    <input type="radio" name="rating" value="3" /> &nbsp;
+		    <input type="radio" name="rating" value="4" /> &nbsp;
+		    <input type="radio" name="rating" value="5" /> &nbsp;
+		    Good                        
+                </div>
+		<!--<div class="field">
+		  <label>Enter the code in the box below:</label>
+		  <input type="text" name="captcha" value="" /><br />
+		  <img src="" alt="" id="captcha" />
+		</div>-->
+		<div class="field">
+                  <a id="button-review" class="button button-alt">Continue</a>
+		</div>
+	    </div>
+	  </div>                
+	  <div id="tab-tags" class="tags standart">
+	    <b>Docs:</b>
+            <a href="" id="docs"></a>
+            <p>&nbsp;</p>
+	    <section class="grid">
+	      <h2>Related Products</h2>
+	      <div class="wrap">
+		  <div class="struct">
+		      <div class="frame">
+		      </div>
+		  </div>
+	      </div>
+	      <div class="wrap">
+		  <div class="struct">
+		      <div class="frame">
+		      </div>
+		  </div>
+	      </div>
+	      <div class="wrap">
+		<div class="struct">
+		    <div class="frame">
+		    </div>
+		</div>
+	      </div>                
+	    </section>
+	  </div>
+{{end}}

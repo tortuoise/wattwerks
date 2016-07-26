@@ -1,0 +1,247 @@
+{{define "front"}}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+
+<head>
+  <link href="../font_pt_sans_narrow.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="../css/markup.css">
+  <link rel="stylesheet" type="text/css" href="../css/colorbox.css">
+  <link rel="stylesheet" type="text/css" href="../css/jquery.stepper.min.css">
+  <link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.8.16.custom.css" />
+  <title>
+    Madowatt Power Electronics Catalog
+  </title>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    if (typeof jQuery == 'undefined')
+    {
+      document.write(unescape("%3Cscript src='js/jquery-1.7.1.min.js' type='text/javascript'%3E%3C/script%3E"));
+    }
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      if ($.browser.msie) {
+        $('#catalog').html('We are sorry but Internet Explorer is not supported.');
+	    //$('.splash img').attr('src', '/static/images/no_ie.jpg');
+	throw new Error('IE is not supported.');
+      }
+    });
+  </script>
+  <script type="text/javascript" src="../js/jsbn.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="../js/prng4.js"></script>
+  <script type="text/javascript" src="../js/rng.js"></script>
+  <script type="text/javascript" src="../js/rsa.js"></script>
+  <script type="text/javascript" src="../js/reg.js"></script>
+  <script type="text/javascript" src="../js/jquery.url.js"></script>
+  <script type="text/javascript" src="../js/watteroo.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui.min.js"></script>      
+  <script type="text/javascript" src="../js/main.js"></script>
+  <script type="text/javascript" src="../js/tabs.js"></script>
+  <script>	
+  $(function(){
+    /*var diveroo = $('<img src="img/splash.gif">').appendTo($('#products'));
+    $.post("CatalogServlet", {'category':"all"}, function(data){
+      var products = $.parseJSON(data);
+      $('#products').empty();
+      $.each(products, function(i, product) {
+        var div = $('<div class="sales-product">').appendTo($('#products'));
+        var div1 = $('<div class="product-image">').appendTo(div);	
+	$('<img>').attr('src',product.urlImg).appendTo(div1);			
+	var div3 = $('<div class="product-title">').appendTo(div);
+	var div31 = $('<td>').text(product.brand).appendTo(div3);
+	var div32 = $('<td>').appendTo(div3);
+	var div321 = $('<div class="productDeets">').attr({'prId':product.id}).appendTo(div32);							
+	var div322 = $('<a href="#">').text(product.desc).appendTo(div321);							
+	var div4 = $('<div class="product-price">').appendTo(div);						
+        var table1 = $('<thead>').appendTo('<table>').appendTo(div4);
+	var div41 = $('<td>').text("Rs. " + numberWithCommas(product.price) + "  ").appendTo(table1);
+	var div42 = $('<td>').appendTo(table1); 
+	var div43=$('<a href="#" >').appendTo(div42);
+	var div5 = $('<img src="img/buy.png" border="0" >').appendTo($('<div class="addproduct">').attr({'id':i,'brand':product.brand,'desc':product.desc,'price':product.price,'urlImg':product.urlImg}).appendTo(div43));				
+      });
+      $(".productDeets").click(function() {
+        var prId = $(this).attr('prid');
+	$.post("ProductDetail",{'action': "details", 'prId':prId}, function(data){ 
+	  $('#products').empty();getProductDetails();},"text");
+	});
+
+	$(".addproduct").click(function() {
+	  var prodId = $(this).attr('id');
+	  var prodName = $(this).attr('brand');
+	  var prodDesc = $(this).attr('desc');
+	  var prodPrice = $(this).attr('price');
+	  var prodUrl = $(this).attr('urlImg');
+	  $.post("Googcart",{'action': "add", 'id':prodId,'brand': prodName, 'desc': prodDesc, 'price':prodPrice, 'urlImg':prodUrl}, function(data){ 
+	  $('.cart-line').empty();getCart();},"text");
+	}); 
+    }, "text");*/
+    checkUser();getTotal();
+  });
+
+  /*check whether user session is alive*/
+  function checkUser(){		
+    $('body').css('cursor', 'wait');
+    $.getJSON('/account', function(data) {
+      $('body').css('cursor', 'auto');
+      $('#user').empty();
+      var expt = $('<tr>').text(data).appendTo($('#user')); 
+      if (data == "Guest") {
+        $('#login').show(); 
+        $('#logout').hide(); 
+      }
+      else {
+        $('#logout').show(); 
+        $('#login').hide(); 
+      }
+    });
+  }
+  /*end check*/
+			
+  function getCart(){
+    $.getJSON('Googcart',function(data) {
+      var cartTotal = 0;
+      $.each(data, function(i,cart){
+        cartTotal += cart.price;
+        var divcp = $('<div class="cart-product">').appendTo('.cart-line');					
+        var divci = $('<div class="cart-info">').appendTo('.cart-line');	
+        $('<img>').attr("src",cart.urlImg).appendTo(divcp);
+	
+        var div1=$('<div class="cart-name">').appendTo(divci);			
+        var div11=$('<td>').text(cart.desc).appendTo(div1);
+        var div2=$('<div class="cart-price">').appendTo(divci);
+        var div21=$('<td>').text(numberWithCommas(cart.price)).appendTo(div2);
+        var div3=$('<div class="cart-qty">').appendTo(divci);
+        /*var div31=$('<td>').text("Remove").appendTo(div3);*/
+        var div4=$('<a href="#" >').appendTo(divci);
+        var div41=$('<img src="img/icon_delete.gif" border="0" >').appendTo($('<div class="cart-instock">').attr({'id':i,'brand':cart.brand,'desc':cart.desc,'price':cart.price,'urlImg':cart.urlImg}).appendTo(div4));   
+        $('.total-price3').text(numberWithCommas(cartTotal));
+      });
+      $('.cart-total-text').text(numberWithCommas(cartTotal));
+      $(".cart-instock").click(function(){
+        var prodId = $(this).attr('id');					
+	var prodName = $(this).attr('brand');
+	var prodDesc = $(this).attr('desc');
+	var prodPrice = $(this).attr('price');
+	var prodUrl = $(this).attr('urlImg');
+	$.post("Googcart",{'action': "remove", 'id':prodId,'brand': prodName, 'desc': prodDesc, 'price':prodPrice, 'urlImg':prodUrl}, function(data){ $('.cart-line').empty(); $('.total-price3').empty(); getCart();}, "text");	
+      });
+    });
+  }
+			
+  function getProductDetails(){
+    $.getJSON('ProductDetail',function(data){
+      var div1 = $('<div id="productDetails">').appendTo('#products');
+      var div11 = $('<div class = "product-imagel">').appendTo(div1);
+      /*$('<img>').attr("src",data.urlImgl).appendTo(div11);
+      var div12 = $('<div class = "product-infol">').load(data.descDetails).appendTo(div1);
+      $('<a>').attr("href",data.urlFile).text(data.urlFile).appendTo(div1);*/
+    });
+  }
+			
+  </script>
+</head>
+
+<body>
+  <div id="notification"></div>
+  <div class="page">
+    <div class="pivot" style="background-color: #FFFFFF;">
+      <header id="header" style="background-color: #FFFFFF;">
+	<div id="logo"> <!--logo-->
+	  <a href="http://www.madowatt.in"><img src="../images/logo_wo_bgrnd.png" title="Madowatt" alt="Madowatt" width="130px" height="44px"/>
+	  </a>
+	</div> <!--logo -->
+	<span id="search"> <!--search-->
+	  <input type="text" name="filter_name" class="default" value="Search" onclick="if($(this).val() == 'Search')$(this).removeClass('default').val('');" autocomplete="off" />
+	  <a class="button button-search" style="background-color: rgb(255, 255, 255);">Search</a>
+	  <div class="search-results-content" id="search-results-content">
+	    <div class="search-results-body" id="search-results-body">No results found!</div>
+	  </div>
+	</span> <!--search-->
+	<br>
+	<span id="welcome" class="hide-phone"> 
+	  <span id="welword">Welcome &nbsp;</span>
+	  <span id="user" >visitor</span> 
+	  <span id="login" class="item" > &nbsp; Login
+	      <div class="drop-content">
+		<div class="drop-body">
+		  <form id="userlogin">
+		    <input type="text" id="email" value="email"/>					
+		    <input type="password" id="pswd" value="pswd"/>					
+		    <input type="submit" value="Login"/>
+		  </form>
+		</div>
+	      </div>
+	     or <a href="/account/register">Register</a>.
+	  </span>
+	  <span id="logout"> 
+	    <a href="/products/front" onclick="logout()" > &nbsp; Logout </a>
+		  <!--<form id="userlogout">
+		    <input type="submit" value="Logout"/>
+		  </form>-->
+	  </span>
+	  <span id=result></span>
+	</span>
+	<div id="cart" class="item"><!--cart-->
+	  <div class="cart-total">
+	    <span class="icon"></span><span>Rs.</span><span class="cart-total-text">0.00</span>
+	    <div class="drop-arrow"></div>
+	  </div>
+	  <div class="cart-wrap">
+	    <div class="cart-text">Shopping Cart</div>
+	    <div class="cart-count">0 item(s)</div>
+	  </div>
+	  <div class="drop-content">
+	    <div class="drop-body">
+	      <div class="empty">Your shopping cart is empty!</div>
+	    </div>
+	  </div>
+	</div> <!--cart-->    
+      </header>
+    
+      <nav class="nav-phone show-phone hide-desktop hide-tablet">
+	<div>Menu</div>
+	<select onChange="location = this.value">
+	  <option></option>
+	  <option value="http://www.madowatt.in">Home</option>
+	  <option value="http://www.madowatt.in/microinverters">Inverters</option>
+	  <option value="http://www.madowatt.in/meters">Meters</option>
+	  <option value="http://www.madowatt.in/modules">Modules</option>
+	  <option value="http://www.madowatt.in/batteries">Batteries</option>
+	  <option value="http://www.madowatt.in/connectors">Chargers</option>
+	  <option value="http://www.madowatt.in/components">Components</option>
+	  <option value="http://www.madowatt.in/mounts">Mounts</option>
+	  <option value="http://www.madowatt.in/tools">Tools/Connectors </option>
+	  <option value="http://www.madowatt.in/power-supply">Power Supplies</option>
+	  <option value="http://www.madowatt.in/sale">Sale</option>
+	</select>
+      </nav>
+      <nav class="nav hide-phone">
+	<ul>
+	  <li class="tftooltip" title="Home"><a href="/products/front"><span class="icon"></span></a></li>
+          <!--CAT MENU LINKS-->
+	</ul>
+	<div class="clear"></div>
+      </nav>
+    </div>  
+ 
+    <div id="pivot">
+      <div id="content">
+        <div id="content-center">
+          <div id="catalog"> </div> 
+	  <section id="products" class="grid">
+		{{template "gds"}}
+	  </section>
+                        
+	</div>
+      </div> 
+    </div> 
+    <div class="bottom"> </div>
+    
+    <!--FOOTER-->
+
+  </div> <!-- page -->
+</body>
+
+</html>
+{{end}}

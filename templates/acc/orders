@@ -1,0 +1,27 @@
+{{define "goods_admin"}}
+<h2>Your Orders</h2>
+<table class="table">
+        <th> Date </th> <th> Id </th> <th> Status </th> <th> Amount </th> <th> Payment Mode </th> <th> Action </th>
+  <tbody>
+	{{range .Orders}}
+		<tr>
+			<td> {{.TxnDateTime}} </td>
+			<td>  {{.TxId}} </td>
+			<td>  {{.TxStatus}} </td>
+			<td> {{.TransactionAmount}} </td>
+			<td> {{.PaymentMode}} </td>
+			<td> <a href="/account/edit/{{.TxId}}"> View </a> </td>
+                        <td> 
+                                <form action="/account/orders/cnf" method="POST" accept-charset="utf-8"> 
+                                        <input type="hidden" name="TxId" value="{{.TxId}}"/>
+                                        <input type="hidden" name="TxStatus" value="SUCCESS"/>
+                                        <input type="submit" class="button button-alt" value="Confirm"/>
+                                </form> 
+                        </td>
+		</tr>
+	{{else}}
+		No pending orders
+	{{end}}
+  </tbody>
+</table>
+{{end}}

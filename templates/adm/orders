@@ -1,0 +1,20 @@
+{{define "goods_admin"}}
+<h2>Orders</h2>
+<table class="cart-list">
+  <th>Time</th><th>Id</th><th>Status</th><th>OrigAmount</th><th>TransactAmount</th><th>PaymentMode</th><th>Action</th>
+  <tbody>
+	{{range .Orders}}
+		<tr>
+			<td> {{.TxDateTime}} </td>
+			<td>  {{.TxId}} </td>
+			<td>  {{.TxStatus}} </td>
+			<td> {{.OriginalAmount}} </td>
+			<td> {{.TransactionAmount}} </td>
+			<td> {{.PaymentMode}} </td>
+			<td> <a href="/account/edit/{{.TxId}}"> View </a> </td>
+		</tr>
+
+	{{end}}
+  </tbody>
+</table>
+{{end}}

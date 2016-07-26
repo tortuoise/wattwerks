@@ -1,0 +1,95 @@
+{{define "goods_admin"}}
+	<h2> Your cart </h2>
+	{{$qts := .Crt.Qntts}}
+	{{$ttls := .Crt.Ttls}}
+        <div class="form-inline">
+        <form id="crtpdt" name="crtpdt" action="/account/cart/pdt" method="POST">
+                <table style="width:100%" class="table">
+                        <th width="15">#</th> <th width="80">GOOD</th> <th>AVAIL</th> <th width="60">PRICE</th> <th width="20">QTY </th> <th width="60">TOTAL</th> 
+                        {{range $i,$gd := .Goods}}
+                        <tr>
+                        <td>
+                          {{$i}} &nbsp;
+                        </td>
+                        <td>
+                          {{$gd.Code}} &nbsp;
+                        </td>
+                        <td>
+                            Availability: 
+                            {{if lt $gd.Deets.Stock 1}}
+                                    <span id="sstatus" style="color:orange">
+                                    Back Ordered </span>
+                                    <span id="sships"> - Ships in 8-10 days </span>
+                            {{else}}
+                                    <span id="sstatus" style="color:green">
+                                    {{$gd.Deets.Stock}}  In Stock </span>
+                                    <span id="sships"> - Ships in 1-2 days </span>
+                            {{end}} &nbsp;&nbsp;
+                        </td>
+                        <td >Rs.
+                           {{$gd.Price}}
+                        </td>
+                        <td>
+                          <input type="text" size="2" class="ta-center qnty" id="{{$i}}" name="{{$i}}" value="{{index $qts $i}}" />
+                        </td>
+                        <td >Rs.
+                          {{index $ttls $i}}
+                        </td>
+                        </tr>
+                        {{else}}
+                            <tr> <td></td> <td></td> <td> Nothing here yet - <a href = "/goods/categories"> start shopping </a> </td> <td></td> <td></td> <td></td> </tr>
+                        {{end}}		
+                        <tr> <td></td> <td></td> <td><h6>TOTAL</h6></td> <td></td> <td></td> <td><h6>Rs. {{.Crt.Ttl}} </h6></td> </tr>
+                        <tr> <td></td> <td></td> <td><h6>SHIPPING/TAXES</h6></td> <td></td> <td></td> <td><h6>Rs. {{.Crt.Txs}}</h6></td> </tr>
+                </table>
+        </form>
+        </div>
+        <table style="width: 100%;" class="table">
+	  <tfoot>
+	    <tr>
+	      <td style="padding-top: 20px;" colspan="6">
+		<form name="paymentForm" id="paymentForm" action="/account/orders/place" method="POST">
+		  <input type="hidden" id="crtid" name="crtid" value="{{.Crt.Id}}" />
+		  <input type="hidden" id="merchantTxnId" name="merchantTxnId" value="{{.Rdr.Id}}" />
+		  <input type="hidden" id="orderAmount" name="orderAmount" value="{{.Crt.Ttl}}" />
+		  <input type="hidden" id="currency" name="currency" value="INR" />
+		  <input type="hidden" id="secSignature" name="secSignature" value="{{.Rdr.SecSign}}" />
+		  <input type="hidden" id="reqtime" name="reqtime" value="{{.Rdr.ReqTime}}" />
+		  <input type="hidden" id="firstName" name="firstname" value="{{.Cstmr.Firstname}}" />
+		  <input type="hidden" id="lastName" name="lastname" value="{{.Cstmr.Lastname}}" />
+		  <input type="hidden" id="email" name="email" value="{{.Cstmr.Email}}" />
+		  <input type="hidden" name="addressStreet1" value="" />
+		  <input type="hidden" name="addressCity" value="" />
+		  <input type="hidden" name="addressZip" value="" />
+		  <input type="hidden" name="addressState" value="" />
+		  <input type="hidden" name="addressCountry" value="INDIA" /> 
+		  <input type="hidden" name="phoneNumber" value="" />
+		  <input type="hidden" name="paymentMode" value="NET_BANKING"/>
+		  <input type="hidden" name="returnUrl" value="http://www.madowatt.in/account/neworder" />
+		  <input type="hidden" name="notifyUrl" value="https://www.madowatt.in/admin/neworder" />
+		  <input type="hidden" name="templateCode" value="MTT001" />
+		  <div class="buttons">
+		    <div class="right"> You'll be re-directed to external Payment Gateway 
+		      <input type="submit" class="button button-alt" value="Make Payment">
+		    </div>
+		    <div class="left"><a class="button button-alt" href="/account/cart" >Back to Cart</a></div>
+		  </div>
+		</form>
+	       </td>
+	     </tr>
+	   </tfoot>
+	   <tfoot>
+	     <tr>
+	       <td colspan="6">
+		 <div class="float-right">
+		   Rs. {{.Crt.Ttl}} 
+		   <br>
+		 </div>
+		 <div style="padding-right: 10px; font-weight: bold;" class="float-right ta-right">
+		   Total:<br>
+		 </div>
+	       </td>
+	     </tr>
+	   </tfoot>
+	</table>
+{{end}}		

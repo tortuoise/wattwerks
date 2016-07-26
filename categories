@@ -1,0 +1,10 @@
+[
+{"Category": "Battery", "Subcategories":["Lithium Ion", "Lead Acid"]},
+{"Category":"Cell", "Subcategories":["Mono","Poly"]},
+{"Category":"Inverter", "Subcategories":["Battery","Central","Micro","String"]},
+{"Category":"Mechanical", "Subcategories":["Structure", "Clamp"]},
+{"Category":"Module", "Subcategories":["Mono", "Poly"]},
+{"Category":"BoS", "Subcategories":["Cable","Connector","Fuse", "Isolator", "MCB", "SPD"]},
+{"Category":"Tool", "Subcategories":["Hand", "Power"]},
+{"Category":"Meter", "Subcategories":["Single", "Triple", "Logger"]}
+]

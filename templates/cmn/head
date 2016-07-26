@@ -1,0 +1,13 @@
+{{define "head"}}
+<head>
+  <link href="../font_pt_sans_narrow.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/css/markup.css">
+  <link rel="stylesheet" type="text/css" href="css/colorbox.css">
+  <link rel="stylesheet" type="text/css" href="css/jquery.stepper.min.css">
+  <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.16.custom.css" />
+  <title>
+	Madowatt Power Electronics Catalog
+  </title>
+  </script>
+</head>
+{{end}}

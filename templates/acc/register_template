@@ -1,0 +1,120 @@
+<section class="standart">
+  <p>If you already have an account with us, please login at the <a href="/account/login">login page</a>.</p>
+  <div class="form-inline">
+    <!--<form enctype="multipart/form-data" method="post" action="/account/register">-->
+    <form id="userreg" name="userreg" >
+      <table>
+	<tr>
+	  <td><h2>Your Personal Details</h2></td>
+	  <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	  <td><h2>Your Address</h2></td>
+	</tr>
+	<tr>
+	    <td>
+	      <div class="field">
+	       <label><span class="required">*</span> First Name:</label>
+	       <input type="text" value="" name="firstname">
+	      </div>
+	    </td>
+	    <td>&nbsp;&nbsp;</td>
+	    <td>
+	      <div class="field">
+		  <label>Company (Individuals leave blank):</label>
+		  <input type="text" value="" name="company">
+	      </div>
+	    </td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	    <label><span class="required">*</span> Last Name:</label>
+	    <input type="text" value="" name="lastname">
+	    </div></td>
+	    <td>&nbsp;&nbsp;</td>
+	    <td><div class="field">
+		<label><span class="required">*</span> Address:</label>
+		<input type="text" value="" name="address_1">
+	    </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> E-Mail:</label>
+	      <input type="text" value="" name="email">
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required">*</span> City:</label>
+	      <input type="text" value="" name="city">
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Phone:</label>
+	      <input type="text" value="" name="phone">
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required" id="postcode-required" style="display: none;">*</span> Post Code:</label>
+	      <input type="text" value="" name="postcode">
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label>Customer Type</label>
+	      <select name="indi">
+		<option value="1">Individual</option>
+		<option selected="selected" value="2">Company</option>
+	      </select>
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required">*</span> State:</label>
+	      <select name="state"><option value=""> --- Please Select --- </option><option value="1475">Andaman and Nicobar Islands</option><option value="1476">Andhra Pradesh</option><option value="1477">Arunachal Pradesh</option><option value="1478">Assam</option><option value="1479">Bihar</option><option value="1480">Chandigarh</option><option value="3970">Chhattisgarh</option><option value="1481">Dadra and Nagar Haveli</option><option value="1482">Daman and Diu</option><option value="1483">Delhi</option><option value="1484">Goa</option><option value="1485">Gujarat</option><option value="1486">Haryana</option><option value="1487">Himachal Pradesh</option><option value="1488">Jammu and Kashmir</option><option value="3971">Jharkhand</option><option value="1489">Karnataka</option><option value="1490">Kerala</option><option value="1491">Lakshadweep Islands</option><option value="1492">Madhya Pradesh</option><option value="1493">Maharashtra</option><option value="1494">Manipur</option><option value="1495">Meghalaya</option><option value="1496">Mizoram</option><option value="1497">Nagaland</option><option value="1498">Orissa</option><option value="1499">Pondicherry</option><option value="1500">Punjab</option><option value="1501">Rajasthan</option><option value="1502">Sikkim</option><option value="1503">Tamil Nadu</option><option value="1504">Tripura</option><option value="1505">Uttar Pradesh</option><option value="3972">Uttarakhand</option><option value="1506">West Bengal</option></select>
+	  </div></td>
+	</tr>
+	<div id="company-id-display" class="field" style="display: none;">
+	    <label><span class="required" id="company-id-required" style="display: none;">*</span> Company ID:</label>
+	    <input type="text" value="" name="company_id">
+	</div>
+	<div id="tax-id-display" class="field" style="display: none;">
+	    <label><span class="required" id="tax-id-required">*</span> Tax ID:</label>
+	    <input type="text" value="" name="tax_id">
+	</div>
+	<tr>
+	  <td>
+	    <h2>Your Password</h2>
+	    <div class="field">
+	      <label><span class="required">*</span> Password:</label>
+	      <input type="password" value="" name="password">
+	    </div>
+	    <div class="field">
+	      <label><span class="required">*</span> Password Confirm:</label>
+	      <input type="password" value="" name="confirm">
+	    </div>
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td>
+	    <h2>Preferred Payment Method</h2>
+	    <div class="field">
+	      <label></label>
+	      <input type="radio" checked="checked" value="1" name="pmt_method">
+		  Net Banking&nbsp;&nbsp;
+	      <input type="radio" value="2" name="pmt_method">
+		  CoD &nbsp;&nbsp;                       
+	      <input type="radio" value="3" name="pmt_method">
+		  Bitcoin                        
+	    </div>
+	  </td>
+	</tr>
+	<tr>
+	   <td> I have read and agree to the <a alt="Privacy Policy" href="/info/privacy" class="colorbox cboxElement"><b>Privacy Policy</b></a> 
+	    <input type="checkbox" value="1" name="agree">
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	    <a onclick="$(this).parents('form').submit();" class="button button-alt" >Continue</a> </div></td>
+	  <td>
+	</tr>
+      </table> 
+    </form>
+  </div>
+</section>

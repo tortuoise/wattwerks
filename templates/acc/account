@@ -1,0 +1,127 @@
+{{define "goods_admin"}}
+<h2>Your Account - Logged in as {{.Cstmr.Firstname}}</h2>
+<section class="standart">
+  <div class="form-inline">
+    <form id="userchange" name="userchange">
+      <table>
+	<tr>
+	  <td><h2>Your Personal Details</h2></td>
+	  <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	  <td><h2>Your Address</h2></td>
+	</tr>
+	<tr>
+	    <td>
+	      <div class="field">
+	       <label> First Name:</label>
+		{{.Cstmr.Firstname}}
+	      </div>
+	    </td>
+	    <td>&nbsp;&nbsp;</td>
+	    <td>
+	      <div class="field">
+		<label>Company (Individuals leave blank):</label>
+		{{.Cstmr.Company}}
+	      </div>
+	    </td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	    <label> Last Name:</label>
+		{{.Cstmr.Lastname}}
+	    </div></td>
+	    <td>&nbsp;&nbsp;</td>
+	    <td><div class="field">
+		<label><span class="required">*</span> Address:</label>
+		{{.Cstmr.Addr}}
+	    </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label> E-Mail:</label>
+		{{.Cstmr.Email}}
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required">*</span> City:</label>
+		{{.Cstmr.City}}
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Phone:</label>
+		{{.Cstmr.Phone}}
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required" id="postcode-required" style="display: none;">*</span> Post Code:</label>
+		{{.Cstmr.Postcode}}
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label>Customer Type</label>
+                {{if .Cstmr.Indi}}
+                  Individual
+                {{else}}
+                  Company
+                {{end}}
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	    <label><span class="required">*</span> State:</label>
+		{{.Cstmr.State}}
+	  </div></td>
+	</tr>
+	<div id="company-id-display" class="field" style="display: none;">
+	    <label><span class="required" id="company-id-required" style="display: none;">*</span> Company ID:</label>
+	    <input type="text" value="" name="company_id">
+	</div>
+	<div id="tax-id-display" class="field" style="display: none;">
+	    <label><span class="required" id="tax-id-required">*</span> Tax ID:</label>
+	    <input type="text" value="" name="tax_id">
+	</div>
+	<tr>
+	  <td>
+	    <h2>Change Password</h2>
+	    <div class="field">
+	      <label><span class="required">*</span>Old Password:</label>
+	      <input type="password" value="" name="old_password">
+	    </div>
+	    <div class="field">
+	      <label><span class="required">*</span>New Password:</label>
+	      <input type="password" value="" name="password">
+	    </div>
+	    <div class="field">
+	      <label><span class="required">*</span>New Password Confirm:</label>
+	      <input type="password" value="" name="confirm">
+	    </div>
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td>
+	    <h2>Preferred Payment Method</h2>
+	    <div class="field">
+	      <label></label>
+              {{if eq .Cstmr.Pmtmethod "1"}}
+                Net Banking
+              {{else if eq .Cstmr.Pmtmethod "2"}}
+                Bitcoin
+              {{else}}
+                CoD
+              {{end}}
+	    </div>
+	  </td>
+	</tr>
+	<tr>
+	   <td> I have read and agree to the <a alt="Privacy Policy" href="/info/privacy" class="colorbox cboxElement"><b>Privacy Policy</b></a> 
+	    <input type="checkbox" value="1" name="agree">
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	    <a onclick="$(this).parents('form').submit();" class="button button-alt" >Amend Details</a> </div></td>
+	  <td>
+	</tr>
+      </table> 
+    </form>
+  </div>
+</section>
+{{end}}

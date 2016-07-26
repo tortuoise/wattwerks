@@ -1,0 +1,40 @@
+{{define "goods_admin"}}
+<section class="standart">
+  <div class="form-inline">
+    <form id="goods_entry" name="goods_upload" method="POST" action="{{.UpURL}}" accept-charset="utf-8" enctype="multipart/form-data">
+      <table>
+	<tr>
+	  <td><div class="field">
+	    <label><span class="required">*</span> Upload File: </label>
+	    <input type="file" value="" name="file">
+            </div>
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td>
+	    <div class="field">
+	      <label><span class="required">*</span> FORMAT:</label>
+	      <input type="radio" checked="checked" value="true" name="format">
+		  JSON&nbsp;&nbsp;
+	      <input type="radio" value="false" name="format">
+		  CSV &nbsp;&nbsp;                       
+	    </div>
+	  </td>
+	</tr>
+	<tr>
+	  <td>  
+	    <h2>Your Password</h2>
+	    <div class="field">
+	      <label><span class="required">*</span> Password:</label>
+	      <input type="password" value="" name="password">
+	    </div>
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	    <input type="submit" class="button button-alt" value="Continue"/></div></td>
+	  <td>
+	</tr>
+      </table> 
+    </form>
+  </div>
+</section>
+{{end}}

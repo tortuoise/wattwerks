@@ -1,0 +1,24 @@
+{{define "left"}}
+	<aside id="content-left">
+          <section class="category">
+            <h2>Categories</h2>
+            <ul>
+            {{$ctgry := .Ctgry}}
+            {{range $i,$c := .Categories}}
+              <li>
+                <a href="/goods/{{$c.Name}}">{{$c.Name}}</a>
+		{{if eq $c.Name $ctgry }}
+                  <ul>
+		  {{range $j,$sc := $c.Subcategories}}
+                  <li>
+                    <a href="/goods/{{$c.Name}}/{{$sc}}">{{$sc}}</a>
+                  </li>
+                  {{end}}
+                  </ul>
+		{{end}}
+	      </li>
+            {{end}}
+	    </ul>
+	  </section>            
+	</aside>
+{{end}}

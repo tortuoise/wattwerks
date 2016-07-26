@@ -1,0 +1,30 @@
+{{define "goods_view"}}
+	<section id="products" class="grid">
+
+          {{$sctgry := .Sctgry}}
+          {{$ctgry := .Ctgry}}
+	  {{range $i,$gd := .Goods}}
+	  <div class="wrap">
+	    <div style="background-color: rgb(250, 250, 250);" class="struct">
+	      <div style="border-color: rgb(235, 235, 235);" class="frame">
+		<div class="image">
+		</div>
+		<div class="name">
+		  <div class="desc">
+	            {{$gd.Brand}}
+		  </div>
+		</div>
+		<div class="price">Rs.
+	            {{$gd.Price}}
+		<!--<div class="buttons">-->
+		  <a class="button button-alt" href="/goods/{{$ctgry}}/{{$sctgry}}/{{$gd.Id}}">View</a>
+		<!--</div>-->
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	  {{end}}
+
+	</section>
+
+{{end}}

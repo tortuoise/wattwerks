@@ -1,0 +1,122 @@
+{{define "prdct_dt"}}
+<section class="standart">
+  <div class="form-inline">
+    <form id="product_edit" name="product_edit" >
+      <table>
+	<tr>
+	  <td><h2>Product Basics</h2></td>
+	  <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	  <td><h2>Product Details</h2></td>
+	</tr>
+	<tr>
+	    <td>
+	      <div class="field">
+	        <label><span class="required">*</span> Code:</label>
+                <!--CODE-->
+	      </div>
+                <!--ID-->
+	    </td>
+	    <td>&nbsp;&nbsp;</td>
+	    <td>
+	      <div class="field">
+		  <label>Details File Path:</label>
+                  <!--DEETSFILE-->
+		  <input type="text" value="" name="descDetails">
+	      </div>
+	    </td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	    <label><span class="required">*</span> Category:</label>
+            <!--CATEGORY-->
+	    </div></td>
+	    <td>&nbsp;&nbsp;</td>
+	    <td><div class="field">
+		<label><span class="required">*</span> Small Image Url:</label>
+                <!--URLIMGS-->
+		<input type="text" value="" name="urlImgs">
+	    </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Subcategory:</label>
+              <!--SUBCATEGORY-->
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Spec Doc Url:</label>
+              <!--URLFILE-->
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Brand:</label>
+              <!--BRAND-->
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required" >*</span> Image URL:</label>
+              <!--URLIMG-->
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	      <label><span class="required">*</span> Description: </label>
+              <!--DESC-->
+	      <input type="text" value="" name="desc">
+	  </div></td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	      <label><span class="required">*</span> URL:</label>
+              <!--URL-->
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div class="field">
+	    <label><span class="required">*</span> Price:</label>
+            <!--PRICE-->
+	    <label><span class="required" style="display: none;">*</span> Stock:</label>
+            <!--STOCK-->
+            </div>
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td>
+	    <div class="field">
+	      <label><span class="required">*</span>Featured:</label>
+              <!--FEATURED-->
+	    </div>
+	    <div class="field">
+	      <label><span class="required">*</span>Hidden:</label>
+              <!--HIDDEN-->
+	    </div>
+	  </td>
+	</tr>
+	<tr>
+	  <td>  
+	    <h2>Your Password</h2>
+	    <div class="field">
+	      <label><span class="required">*</span> Password:</label>
+	      <input type="password" value="" name="password">
+	    </div>
+	  </td>
+	  <td>&nbsp;&nbsp;</td>
+	  <td><div class="field">
+	    <a onclick="$(this).parents('form').submit();" class="button button-alt" >Update</a> </div></td>
+	  <td>
+	</tr>
+      </table> 
+    </form>
+  </div>
+
+  <h2> Delete Product </h2> 
+  <form id="product_delete" name="product_delete">
+    <div class="field">
+      <label> Product ID: </label>
+      <input type="text" name="id" value="">
+    </div>
+    <div class="field">
+      <a onclick="$(this).parents('form').submit();" class="button button-alt" >Delete</a> </div></td>
+    </div>
+  </form>
+</section>
+{{end}}

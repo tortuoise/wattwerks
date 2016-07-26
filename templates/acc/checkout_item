@@ -1,0 +1,37 @@
+	  <tr>
+	    <td class="ta-center hide-phone" width="1">
+              <!--IMAGE-->
+	    </td>
+	    <td>
+	      <!--PRODUCT-->
+		<br>Availability: 
+		  <!--AVAILABILITY-->
+                <div>
+		</div>
+	    </td>
+	    <td class="hide-phone">
+              <!--MODEL-->
+            </td>
+	    <td class="quantity" width="120">
+	      <!--<div style="margin: 0px 15px 0px 0px;" class="stepper-wrap">-->
+		<input style="margin: 0px;" name="quantity[97]" size="2" class="ta-center qnty" autocomplete="off" type="text" id="update_qntty"
+		<!--QUANTITY-->
+		<!--<div class="stepper-btn-wrap"><a class="stepper-btn-up">▴</a><a class="stepper-btn-dwn">▾</a>
+		</div> -->
+	      <!--</div>&nbsp;-->
+	      <a class="update_cart">
+		<input src="images/update.png" alt="Update" title="Update" type="image">&nbsp;
+	      </a>
+	      <!--PRODUCTID-->
+	      <a class="remove_cart">
+		<input src="images/remove.png" alt="Remove" title="Remove" type="image">&nbsp;
+	      </a>
+	    </td>
+	    <td class="ta-right">Rs.
+              <!--UNIT PRICE-->
+            </td>
+	    <td class="ta-right">Rs.
+              <!--TOTAL-->
+            </td>
+	</tr>
+				

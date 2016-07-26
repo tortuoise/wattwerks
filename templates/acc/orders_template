@@ -1,0 +1,6 @@
+<h2>Your Orders</h2>
+<table class="cart-list">
+  <tbody>
+    <!--ORDERLOOP-->
+  </tbody>
+</table>

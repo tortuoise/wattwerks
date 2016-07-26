@@ -1,0 +1,6 @@
+{{define "goods_admin"}}
+<section class="standart">
+  <h1>Sorry there's been an error</h1>
+  <p>{{.Message}}</p>
+</section>
+{{end}}

@@ -1,0 +1,20 @@
+{{define "goods_admin"}}
+
+<table class="table"><th>Id</th><th>First</th><th>Last</th><th>Email</th><th>City</th><th>Postcode</th><th>Individual?</th><th>Action</th>
+	<tbody>
+	{{range .Cstmrs}}
+		<tr>
+			<td>  {{.Id}} </td>
+			<td>  {{.Firstname}} </td>
+			<td> {{.Lastname}} </td>
+			<td> {{.Email}} </td>
+			<td> {{.City}} </td>
+			<td> {{.Postcode}} </td>
+			<td> {{.Indi}} </td>
+			<td> <a href="/account/edit/{{.Id}}"> Edit </a> </td>
+		</tr>
+	{{end}}
+	</tbody>
+</table>
+<p> {{.Message}}</p>
+{{end}}

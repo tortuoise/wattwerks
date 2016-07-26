@@ -1,0 +1,11 @@
+
+    <tr>
+      <td class="name ta-left">
+	<!--ORDERNUMBER-->
+      </td>
+      <td class="quantity ta-center">
+      </td>
+      <td class="total">Rs.
+        <!--ORDERVALUE-->
+      </td>
+    </tr>

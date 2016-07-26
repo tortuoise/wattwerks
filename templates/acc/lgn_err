@@ -1,0 +1,37 @@
+{{define "goods_admin"}}
+	  <h2> {{.Message}} </h2>
+          
+	  <section class="fluid50">
+	    <div class="content">
+	      <h2>New Customer</h2>
+	      <p><b>Register Account</b><br>By creating an account you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made.</p>
+	      <a class="button button-alt" href="/account/register">Continue</a>
+	    </div>
+	  </section>
+	  <section class="fluid50">
+	    <div class="content">
+	      <h2>Returning Customer</h2>
+	      <div class="form-inline">
+		<!--<form enctype="multipart/form-data" method="post" action="/account">-->
+		<form id="userlogin1" name="userlogin1" action="/account/login" method="POST">
+		  <p>I am a returning customer</p>
+		  <div class="field">
+		    <label>E-Mail Address:</label>
+		    <input type="text" value="" name="email">
+		  </div>
+		  <input type="hidden" value="login" name="action">
+		  <div class="field">
+		    <label>Password:</label>
+		    <input type="password" value="" name="pswd">
+		    <a href="/account/forgot">Forgotten Password</a>
+		  </div>
+		  <div class="field">
+		    <!--<a onclick="$(this).parents('form').submit();" class="button button-alt">Login</a>-->
+                    <input type="submit" value="Login" class="button button-alt">
+		  </div>
+		  <!--<input type="hidden" value="/account" name="redirect">-->
+		</form>
+	      </div>
+	    </div>
+	  </section>       
+{{end}}

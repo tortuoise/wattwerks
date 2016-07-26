@@ -1,0 +1,20 @@
+{{define "goods_view"}}
+
+<table class="table"><th>Id</th><th>Code</th><th>Category</th><th>Subcategory</th><th>Brand</th><th>Price</th><th>Featured</th><th>Action</th>
+	<tbody>
+	{{range .Goods}}
+		<tr>
+			<td>  {{.Id}} </td>
+			<td>  {{.Code}} </td>
+			<td> {{.Category}} </td>
+			<td> {{.Subcategory}} </td>
+			<td> {{.Brand}} </td>
+			<td> {{.Price}} </td>
+			<td> {{.Featured}} </td>
+			<td> <a href="/goods/view/{{.Id}}"> View </a> </td>
+		</tr>
+	{{end}}
+	</tbody>
+</table>
+<p> {{.Message}}</p>
+{{end}}
