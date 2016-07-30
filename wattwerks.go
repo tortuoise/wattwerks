@@ -145,7 +145,7 @@ import (
                 Tax float64 `json:"tax,string"`//percent
                 Price float64 `json:"price,string"`
                 Stock int `json:"stock,string"`
-                Related []int64 `json:"related,string"`
+                Related []int64 `json:"related"`
                 Prices []float64 `json:"prices,string"`
                 Volumes []int `json:"volumes,string"`
                 //PriceVolume map[int]float64 `json:"priceVolume"`
@@ -158,6 +158,10 @@ import (
                 UrlImgs2 string `json:"urlImgs2"`
                 UrlImgs3 string `json:"urlImgs3"`
                 UrlFile string `json:"urlFile"`
+        }
+        type RelatedGoods struct {
+                Gd Good `json:"good,string"`
+                Rgds []Good `json:"goods,string"`
         }
 //rendering structs
         type Render struct { //for most purposes
@@ -216,6 +220,16 @@ import (
                 Cstmr Cust `json:"cstmr"`
                 Crt Cart `json:"crt"`
                 Gd Good `json:"good,string"`
+                Categories []Category `json:"categories,string"`
+                Deets GoodDeets `json:"gooddeets"`
+        }
+        type Render7 struct { //for catalog templates
+                Ctgry string `json:"ctgry"`
+                Sctgry string `json:"sctgry"`
+                Cstmr Cust `json:"cstmr"`
+                Crt Cart `json:"crt"`
+                Gd Good `json:"good,string"`
+                Rgds []Good `json:"goods,string"`
                 Categories []Category `json:"categories,string"`
                 Deets GoodDeets `json:"gooddeets"`
         }
@@ -2351,6 +2365,11 @@ var(
                                 err = tmpl.ExecuteTemplate(w,"base", data)
                                 handle(err)
                                 return
+                        case RelatedGoods:
+                                data := Render7{ctg,sctg,cs,getCart(c, crtd, &cs), rndr.Gd, rndr.Rgds, c0, rndr.Gd.Deets}
+                                err = tmpl.ExecuteTemplate(w,"base", data)
+                                handle(err)
+                                return
                         default:
                                 data := Render4{"",cs,s0,c0,getCart(c,crtd,&cs)}
                                 err = tmpl.ExecuteTemplate(w,"base", data)
@@ -2407,7 +2426,15 @@ var(
                                 handleCatalogwTemplate(w, r, tmpl_cat_gds_dts_docs, gdd)
                                 return
                         case "rels":
-                                handleCatalogwTemplate(w, r, tmpl_cat_gds_dts_rels, gdd)
+                                rgs := make([]Good, len(gdd.Deets.Related))
+                                for i,rg := range gdd.Deets.Related {
+                                        log.Println(rg)
+                                        rgs[i],err = getGood(c, rg)
+                                        log.Println(rgs[i].Id)
+                                        hndl(err, "handleGoodSubDeets0")
+                                }
+                                
+                                handleCatalogwTemplate(w, r, tmpl_cat_gds_dts_rels, RelatedGoods{gdd, rgs})
                                 return
                         case "revs":
                                 handleCatalogwTemplate(w, r, tmpl_cat_gds_dts_revs, gdd)
