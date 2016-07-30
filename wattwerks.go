@@ -249,7 +249,10 @@ var(
 	tmpl_gds_lst = template.Must(template.ParseFiles("templates/cat/goods_list", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	tmpl_cat_cat = template.Must(template.ParseFiles("templates/cat/ctgry", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	tmpl_cat_sub_cat = template.Must(template.ParseFiles("templates/cat/sctgry", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
-	tmpl_cat_gds_dts = template.Must(template.ParseFiles("templates/cat/gds_dts", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_cat_gds_dts = template.Must(template.ParseFiles("templates/cat/gds_dts", "templates/cat/gds_dts_desc", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_cat_gds_dts_docs = template.Must(template.ParseFiles("templates/cat/gds_dts", "templates/cat/gds_dts_docs", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_cat_gds_dts_rels = template.Must(template.ParseFiles("templates/cat/gds_dts", "templates/cat/gds_dts_rels", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_cat_gds_dts_revs = template.Must(template.ParseFiles("templates/cat/gds_dts", "templates/cat/gds_dts_revs", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	validEmail = regexp.MustCompile("^.*@.*\\.(com|org|in|mail|io)$")
 	validPath = regexp.MustCompile(`^/(reg|ta|how|flock|confirm|product|goods)?/?(.*)$`)
 	cksnbl = []byte(`Please enable cookies`)// to &lt; a href=\"/account/\"&gt; Continue &lt; /a &gt;`)
@@ -1236,6 +1239,53 @@ var(
                 handleAccountEdit(w,r)
         }
 
+        func handlePsswrdEditP(w http.ResponseWriter, r *http.Request ) {
+                c := appengine.NewContext(r)
+                session, err := ckstore.Get(r, "account_path")
+                hndl(err, "handlePsswrdEditP0")
+                // get posted form data
+                err = r.ParseForm()
+                hndl(err, "handlePsswrdEditP1")
+                //validation
+                  v := r.Form
+                  ag := v.Get("agree")
+                  opw := v.Get("old_password")
+                  pw := v.Get("password")
+                  cn := v.Get("confirm")
+                  if pw=="" || cn=="" || ag=="" {
+                          handleAccountError(c, w, r, 3, []byte("Missing required data"))
+                          return
+                  }
+                  lggd := session.Values["lggd"]
+                  if lggd != "Guest" {
+
+                  }
+                  cs, err := getCstmr(c, lggd.(string))
+                  hndl(err, "handlePsswrdEditP2")
+                  if cs.Firstname == "Guest" {
+                          handleAccountError(c, w, r, 3, []byte("Invalid first name"))
+                          return
+                  }
+                  if pw == "" || pw != cn || opw != cs.Password {
+                          handleAccountError(c, w, r, 3, []byte("Password mismatch"))
+                          return
+                  }
+                //amend Cust
+                cs.Password = pw
+                pk := datastore.NewKey(c, "cstmr", "", cs.Id, nil)
+                hndl(err, "handlePsswrdEditP3")
+                if _, err := datastore.Put(c, pk, &cs); err != nil {
+                        http.Error(w, err.Error(), http.StatusInternalServerError)
+                        err := tmpl_cmn.ExecuteTemplate(w,"problem", "")
+                        hndl(err, "handlePsswrdEditP4")
+                        return
+                }
+                session.Values["lggd"] = cs.Firstname
+                session.Values["crtd"] = cs.Crtid
+                session.Save(r, w)
+                handleAccountEdit(w,r)
+        }
+
         func handleAccountCart(w http.ResponseWriter, r *http.Request ) {
                 c := appengine.NewContext(r)
                 session, err := ckstore.Get(r, "account_path")
@@ -1658,8 +1708,8 @@ var(
                 handleAccountwTemplate(w, r, tmpl_acc_frgt, 0)
                 return
         }
-        
-	const reminder = `You requested your password, which is: %s` 
+
+	const reminder = `You requested your password, which is: %s`
 	func reminderEmail(c *(appengine.Context),  e string, p string) {
                 msg := &mail.Message {
                         Sender: "Wattwerks Support <support@wattwerks.appspotmail.com>",
@@ -2342,6 +2392,32 @@ var(
                 handleCatalogwTemplate(w, r, tmpl_cat_gds_dts, gdd)
         }
 
+        func handleGoodSubDeets(w http.ResponseWriter, r *http.Request) {
+                c := appengine.NewContext(r)
+                vars := mux.Vars(r)
+                gd,err := strconv.ParseInt(vars["id"],10,64)
+                handle(err)
+                gdd, err := getGood(c,gd)
+                handle(err)
+                switch vars["subview"]{
+                        case "desc":
+                                handleCatalogwTemplate(w, r, tmpl_cat_gds_dts, gdd)
+                                return
+                        case "docs":
+                                handleCatalogwTemplate(w, r, tmpl_cat_gds_dts_docs, gdd)
+                                return
+                        case "rels":
+                                handleCatalogwTemplate(w, r, tmpl_cat_gds_dts_rels, gdd)
+                                return
+                        case "revs":
+                                handleCatalogwTemplate(w, r, tmpl_cat_gds_dts_revs, gdd)
+                                return
+                        default:
+                                handleCatalogwTemplate(w, r, tmpl_cat_gds_dts, gdd)
+                                return
+                }
+        }
+
         func makeHandler(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc{
                 return func(w http.ResponseWriter, r *http.Request) { 
                         m := validPath.FindStringSubmatch(r.URL.Path)
@@ -2386,6 +2462,7 @@ var(
                 s1.HandleFunc("/forgot", makeHandler(handleAccountForgotP)).Methods("POST")
                 s1.HandleFunc("/edit", makeHandler(handleAccountEdit)).Methods("GET")
                 s1.HandleFunc("/edit", makeHandler(handleAccountEditP)).Methods("POST")
+                s1.HandleFunc("/psswrdedit", makeHandler(handlePsswrdEditP)).Methods("POST")
                 s1.HandleFunc("/orders", makeHandler(handleAccountOrders)).Methods("GET")
                 s1.HandleFunc("/orders/place", makeHandler(handleAccountOrderP)).Methods("POST")
                 s1.HandleFunc("/orders/cnf", makeHandler(handleAccountOrderCnfP)).Methods("POST")
@@ -2401,6 +2478,7 @@ var(
                 s2.HandleFunc("/{category}", makeHandler(handleCategory)).Methods("GET")
                 s2.HandleFunc("/{category}/{subcategory}", makeHandler(handleSubcategory)).Methods("GET")
                 s2.HandleFunc("/{category}/{subcategory}/{id}", makeHandler(handleGoodDeets)).Methods("GET")
+                s2.HandleFunc("/{category}/{subcategory}/{id}/{subview}", makeHandler(handleGoodSubDeets)).Methods("GET")
                 s3 := r.PathPrefix("/promo").Subrouter()
                 s3.HandleFunc("/", makeHandler(handleMainPage))
                 s3.HandleFunc("/reg", makeHandler(handleRegPage))

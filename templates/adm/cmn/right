@@ -8,6 +8,7 @@
 	      <li><a href="/admin/goods">List Goods</a></li>
 	      <li><a href="/admin/goods/upload">Upload Goods</a></li>
 	      <li><a href="/admin/accounts">List Accounts</a></li>
+	      <li><a href="/admin/accounts/upload">Upload Accounts</a></li>
 	      <li><a href="/admin/orders">List Orders</a></li>
             </ul>
 	  </section> 

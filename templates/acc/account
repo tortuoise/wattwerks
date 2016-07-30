@@ -2,7 +2,7 @@
 <h2>Your Account - Logged in as {{.Cstmr.Firstname}}</h2>
 <section class="standart">
   <div class="form-inline">
-    <form id="userchange" name="userchange">
+    <form id="userchange" name="userchange" action="/account/psswrdedit" method="POST" accept-charset="utf-8">
       <table>
 	<tr>
 	  <td><h2>Your Personal Details</h2></td>
@@ -117,7 +117,7 @@
 	  </td>
 	  <td>&nbsp;&nbsp;</td>
 	  <td><div class="field">
-	    <a onclick="$(this).parents('form').submit();" class="button button-alt" >Amend Details</a> </div></td>
+	    <input type="submit" class="button button-alt" value="Amend Details"/></div>
 	  <td>
 	</tr>
       </table> 
