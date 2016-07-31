@@ -1,0 +1,10 @@
+{{define "info_view"}}
+<h1> About Us </h1>
+<section class="typography"><p>
+	<span style="font-family:tahoma,geneva,sans-serif;">Improving efficiency and reducing waste is what drives us. Whether it's energy efficiency or efficiently using our time, we constantly strive to become more efficient and cut waste. This is why Madowatt brings to discerning customers highly efficient solar and power electronics (products and components) from around the world. </span><span style="font-family:tahoma,geneva,sans-serif;"> We're contantly on the lookout for smaller, more efficient products for our customers. </span></p>
+<p>
+	<span style="font-family:tahoma,geneva,sans-serif;">If you're looking for more control over your power generation or consumption, we may have just the product or component you're looking for. If you're a product developer, you may just find that low powered IC in our catalog. If you're a photovoltaic industry professional looking for more efficient cells or inverters this may just be the place for you.<br>
+	<br>
+        Energy has always been the world's currency, now more so than ever before. It's imperative we're efficient using it.</span></p>
+</section>
+{{end}}

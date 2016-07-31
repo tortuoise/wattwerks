@@ -1,0 +1,16 @@
+{{define "info_view"}}
+    <h1>Payment Information</h1>
+    <section class="typography"><p>
+      <strong>Net-Banking (Electronic Funds Transfer, NEFT / RTGS)</strong>: If you have an online banking account with any bank which gives you facility to transfer the funds. You can also transfer the invoice amount&nbsp; by net banking to our&nbsp; bank account.<br>
+      <br>
+      Once amount transferred, please send us the transaction id and other details of your transaction. NEFT transfer may takes few hours to 2 working days for comleting transfer depending on your bank. After the transfers are completed and the same reflect in our bank account, the products would be shipped as per the timelines indicated on the product page.<br>
+      <br>
+      Our&nbsp; Bank account details will be available to you when you choose 'Bank Transfer' as the mode of payment during checkout.</p>
+      <p>
+      <strong>Deposit Cashin our account / Cheque / DD</strong>: You can pay easily by depositing Cash/Cheque/Demand Draft to our bank account. Kindly note that the order will be processed after the amount is credited in our account in case of cheque and DD.<br>
+      <br>
+      In case you wish to pay using cash deposit or cheque or DD, please send us an email for our&nbsp; Bank account details once you make purchase.</p>
+      <p>
+      <strong>Credit Card / Debit Card / Net Banking (Coming soon)</strong>: We will soon be accepting Indian &amp; International credit cards and Debit Card like Visa, American Express, Citibank, etc.</p>
+    </section>
+{{end}}

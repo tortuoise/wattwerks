@@ -1,0 +1,20 @@
+{{define "goods_subview"}}
+        <div id="tabs" class="tabs">
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/desc">Description</a>
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/docs">Docs</a>            
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/revs">Reviews</a>
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/rels">Related</a>
+        </div>
+        <section class="grid">
+        <h2>Related Products</h2>
+        {{range $i,$c := .Rgds}}
+        <div class="wrap">
+                <div class="struct">
+                        <div class="frame">
+                                <a href="/goods/{{$c.Category}}/{{$c.Subcategory}}/{{$c.Id}}"> {{$c.Brand}}&nbsp;{{$c.Desc}} </a> 
+                        </div>
+                </div>
+        </div>
+        {{end}}
+        </section>
+{{end}}

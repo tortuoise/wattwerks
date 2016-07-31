@@ -1,0 +1,21 @@
+{{define "right"}}
+
+	<aside id="content-right">
+	  <section class="content">
+	    <h2>Account</h2>
+	    <ul class="list">
+              {{if eq .Cstmr.Firstname "Guest"}}
+	      <li><a href="/account/login">Login/Register</a> 
+	      <li><a href="/account/forgot">Forgot Password</a></li>
+              {{else}}
+	      <li><a href="/account/edit">Edit Account</a></li>
+	      <li><a href="/account/pending">Pending Orders</a></li>
+	      <li><a href="/account/completed">Completed Orders/Returns </a></li>
+	      <li><a href="/account/logout">Logout </a></li>
+              {{end}}
+            </ul>
+	  </section> 
+	</aside>
+
+
+{{end}}
