@@ -1,3 +1,4 @@
+{{define "info_view"}}
 <h1>Shipping and Returns</h1>
 <section class="typography"><p>
 	<strong>Estimate Shipping Cost:</strong> For estimating the shipping cost, add the items you want to order to your cart. Click on shopping cart on the top-right corner of the page and click on View Cart. On shopping cart page you will see various shipping methods and pricing depending upon location you select.<br>
@@ -12,3 +13,4 @@
 	<br>
 	<span style="font-size:10px;">*The above shipping / delivery time is only an estimate based on our past experience. However, your shipping may get delayed due to external factors which are beyong our control. We do not assume any responsibility to deliver the package within above estimated time.</span></p>
 </section>
+{{end}}
