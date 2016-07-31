@@ -267,6 +267,15 @@ var(
 	tmpl_cat_gds_dts_docs = template.Must(template.ParseFiles("templates/cat/gds_dts", "templates/cat/gds_dts_docs", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	tmpl_cat_gds_dts_rels = template.Must(template.ParseFiles("templates/cat/gds_dts", "templates/cat/gds_dts_rels", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	tmpl_cat_gds_dts_revs = template.Must(template.ParseFiles("templates/cat/gds_dts", "templates/cat/gds_dts_revs", "templates/cat/cmn/body", "templates/cat/cmn/top", "templates/cat/cmn/left", "templates/cat/cmn/right", "templates/cat/cmn/center", "templates/cat/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_inf_abt = template.Must(template.ParseFiles("templates/inf/about", "templates/inf/cmn/body", "templates/inf/cmn/top", "templates/inf/cmn/left", "templates/inf/cmn/center", "templates/inf/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_inf_pry = template.Must(template.ParseFiles("templates/inf/privacy", "templates/inf/cmn/body", "templates/inf/cmn/top", "templates/inf/cmn/left", "templates/inf/cmn/center", "templates/inf/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_inf_trm = template.Must(template.ParseFiles("templates/inf/terms", "templates/inf/cmn/body", "templates/inf/cmn/top", "templates/inf/cmn/left", "templates/inf/cmn/center", "templates/inf/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_inf_cnt = template.Must(template.ParseFiles("templates/inf/contact", "templates/inf/cmn/body", "templates/inf/cmn/top", "templates/inf/cmn/left", "templates/inf/cmn/center", "templates/inf/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_inf_nws = template.Must(template.ParseFiles("templates/inf/about", "templates/inf/cmn/body", "templates/inf/cmn/top", "templates/inf/cmn/left", "templates/inf/cmn/center", "templates/inf/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_inf_ste = template.Must(template.ParseFiles("templates/inf/about", "templates/inf/cmn/body", "templates/inf/cmn/top", "templates/inf/cmn/left", "templates/inf/cmn/center", "templates/inf/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_inf_pmt = template.Must(template.ParseFiles("templates/inf/payment", "templates/inf/cmn/body", "templates/inf/cmn/top", "templates/inf/cmn/left", "templates/inf/cmn/center", "templates/inf/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_inf_shp = template.Must(template.ParseFiles("templates/inf/ship", "templates/inf/cmn/body", "templates/inf/cmn/top", "templates/inf/cmn/left", "templates/inf/cmn/center", "templates/inf/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_inf_rtn = template.Must(template.ParseFiles("templates/inf/ship", "templates/inf/cmn/body", "templates/inf/cmn/top", "templates/inf/cmn/left", "templates/inf/cmn/center", "templates/inf/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	validEmail = regexp.MustCompile("^.*@.*\\.(com|org|in|mail|io)$")
 	validPath = regexp.MustCompile(`^/(reg|ta|how|flock|confirm|product|goods)?/?(.*)$`)
 	cksnbl = []byte(`Please enable cookies`)// to &lt; a href=\"/account/\"&gt; Continue &lt; /a &gt;`)
@@ -1052,7 +1061,7 @@ var(
                         srvErr(c, w, err)
                         return
                 }
-		
+
                 if session.Values["lggd"] != nil && session.Values["lggd"].(string) != "Guest" { // returning user
                         var cs Cust
                         cs, err = getCstmr(c, session.Values["lggd"].(string))
@@ -1086,6 +1095,8 @@ var(
                 session, err := ckstore.Get(r, "account_path")
                 handle(err)
                 gdsession, err := ckstore.Get(r, "goods_path")
+                handle(err)
+                infsession, err := ckstore.Get(r, "info_path")
                 handle(err)
                 // get posted form data
                 err = r.ParseForm()
@@ -1130,11 +1141,16 @@ var(
                         session.Values["crtd"] = crtd
                         gdsession.Values["lggd"] = xs.Firstname
                         gdsession.Values["crtd"] = crtd
+                        infsession.Values["lggd"] = xs.Firstname
+                        infsession.Values["crtd"] = crtd
 			session.Options = &sessions.Options{
 						Path:"/account/",
 					}
 			gdsession.Options = &sessions.Options{
 						Path:"/goods/",
+					}
+			infsession.Options = &sessions.Options{
+						Path:"/info/",
 					}
                         sessions.Save(r, w)
                         data := Render4 {"Logged in", xs, s0, c0, getCart(c, crtd, &xs)}
@@ -1488,6 +1504,11 @@ var(
                         http.Error(w, err.Error(), 500)
                         return
                 }
+                infsession, err := ckstore.Get(r, "info_path")
+                if err != nil {
+                        http.Error(w, err.Error(), 500)
+                        return
+                }
                 var s0 []Good
                 var c0 []Category
                 c0, err = getCategories(c)
@@ -1510,6 +1531,11 @@ var(
                 gdsession.Values["crtd"] = int64(0)
                 gdsession.Options = &sessions.Options{
                                         Path:"/goods/",
+                                }
+                infsession.Values["lggd"] = "Guest"
+                infsession.Values["crtd"] = int64(0)
+                infsession.Options = &sessions.Options{
+                                        Path:"/info/",
                                 }
                 err = sessions.Save(r, w)
 		handle(err)
@@ -2308,7 +2334,9 @@ var(
 		hndl(err, "logout0" )
 		gdsession, err := ckstore.Get(r, "goods_path")
 		hndl(err, "logout1")
-		
+		infsession, err := ckstore.Get(r, "info_path")
+		hndl(err, "logout1")
+
 		session.Values["lggd"] = "Guest"
 		session.Values["crtd"] = int64(0)
 		session.Options = &sessions.Options{
@@ -2318,6 +2346,11 @@ var(
 		gdsession.Values["crtd"] = int64(0)
 		gdsession.Options = &sessions.Options{
 			Path:"/goods/",
+		}
+		infsession.Values["lggd"] = "Guest"
+		infsession.Values["crtd"] = int64(0)
+		infsession.Options = &sessions.Options{
+			Path:"/info/",
 		}
 		err = sessions.Save(r, w)
 		hndl(err, "logout2")
@@ -2433,7 +2466,6 @@ var(
                                         log.Println(rgs[i].Id)
                                         hndl(err, "handleGoodSubDeets0")
                                 }
-                                
                                 handleCatalogwTemplate(w, r, tmpl_cat_gds_dts_rels, RelatedGoods{gdd, rgs})
                                 return
                         case "revs":
@@ -2453,6 +2485,74 @@ var(
                                 return
                         }
                         fn(w, r) //, m[2])
+                }
+        }
+
+// handlers for info pages
+        func handleInfowTemplate(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+                c := appengine.NewContext(r)
+                session, err := ckstore.Get(r, "info_path")
+                if err != nil {
+                        http.Error(w, err.Error(), 500)
+                        return
+                }
+                var s0 []Good
+                var c0 []Category
+                c0, err = getCategories(c)
+                if err != nil {
+                        srvErr(c, w, err)
+                        return
+                }
+                ctg,_ := mux.Vars(r)["page"]
+                if session.Values["lggd"] != nil { // returning user
+                        cs, err := getCstmr(c, session.Values["lggd"].(string))
+                        crtd := session.Values["crtd"].(int64)
+                        if err != nil {
+                                srvErr(c, w, err)
+                                return
+                        }
+                        data := Render4{strings.Title(ctg),cs,s0,c0,getCart(c,crtd,&cs)}
+                        err = tmpl.ExecuteTemplate(w,"base", data)
+                        handle(err)
+                        return
+                }
+                ckchck(w, r) //if session is nil check whether cookies enabled
+        }
+
+        func handleInfoPage(w http.ResponseWriter, r *http.Request) {
+                //c := appengine.NewContext(r)
+                vars := mux.Vars(r)
+                switch vars["page"] {
+                        case "about":
+                                handleInfowTemplate(w, r, tmpl_inf_abt)
+                                return
+                        case "privacy":
+                                handleInfowTemplate(w, r, tmpl_inf_pry)
+                                return
+                        case "terms":
+                                handleInfowTemplate(w, r, tmpl_inf_trm)
+                                return
+                        case "contact":
+                                handleInfowTemplate(w, r, tmpl_inf_cnt)
+                                return
+                        case "news":
+                                handleInfowTemplate(w, r, tmpl_inf_nws)
+                                return
+                        case "site":
+                                handleInfowTemplate(w, r, tmpl_inf_ste)
+                                return
+                        case "payment":
+                                handleInfowTemplate(w, r, tmpl_inf_pmt)
+                                return
+                        case "shipment":
+                                handleInfowTemplate(w, r, tmpl_inf_shp)
+                                return
+                        case "returns":
+                                handleInfowTemplate(w, r, tmpl_inf_rtn)
+                                return
+                        default:
+                                handleInfowTemplate(w, r, tmpl_inf_abt)
+                                return
                 }
         }
 
@@ -2512,6 +2612,9 @@ var(
                 s3.HandleFunc("/how", makeHandler(handleHowPage))
                 s3.HandleFunc("/flock", makeHandler(handleFlockPage))
                 s3.HandleFunc("/confirm/", makeHandler(handleConfirmPage))
+                s4 := r.PathPrefix("/info").Subrouter()
+                //s4.HandleFunc("/", makeHandler(handleInfoPage)).Methods("GET")
+                s4.HandleFunc("/{page}", makeHandler(handleInfoPage)).Methods("GET")
                 http.Handle("/", r)
         }
 

@@ -1,3 +1,4 @@
+{{define "info_view"}}
 <h1>Contact Us</h1>
 <section class="content">
   <h2>Our Location</h2>
@@ -18,3 +19,4 @@ India.                </div>
 <section class="content">
             Please contact us by email for timely responses <strong><a target="_blank" href="mailto:service@mail.madowatt.in">service@mail.madowatt.in</a></strong> page.
             </section>
+{{end}}

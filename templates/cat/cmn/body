@@ -38,12 +38,12 @@
 	</span>
 	<div id="cart" class="item"><!--cart-->
 	  <a href = "/account/cart"> <div class="cart-total">
-	    <span class="icon"></span><span>Rs.</span><span class="cart-total-text">0.00</span>
+	    <span class="icon"></span><span>Rs.</span><span class="cart-total-text">{{.Crt.Ttl}}</span>
 	    <div class="drop-arrow"></div>
 	  </div></a>
 	  <div class="cart-wrap">
 	    <div class="cart-text">Shopping Cart</div>
-	    <div class="cart-count">0 item(s)</div>
+	    <div class="cart-count">{{len .Crt.Ids}} item(s)</div>
 	  </div>
 	  <div class="drop-content">
 	    <div class="drop-body">
