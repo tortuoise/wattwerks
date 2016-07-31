@@ -1,0 +1,47 @@
+{{define "goods_subview"}}
+	  <div id="tabs" class="tabs">
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/desc">Description</a>
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/docs">Docs</a>            
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/revs">Reviews</a>
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/rels">Related</a>
+	  </div>
+	  <div id="tab-description" class="typography product-description">
+	  </div>
+	  <div id="tab-review" class="product-reviews">
+	    <div id="review">
+            <!--REVIEWS-->
+            </br>
+            </div>
+	    <div class="form-inline">
+		<h2 id="review-title">Write a review</h2>
+		<div class="field">
+		    <label>Your Name:</label>
+		    <input type="text" id="name" name="name" value="" />
+		</div>
+		<div class="field">
+		    <label>Your Review:</label>
+		    <textarea name="text" id="review" rows="5" style="width: 90%;"></textarea>
+		    <span style="font-size: 11px;"><span style="color: #FF0000;">Note:</span> HTML is not translated!</span>
+		</div>
+		<div class="field">
+		    <label>Rating:</label>
+		    Bad &nbsp;
+		    <input type="radio" name="rating" value="1" /> &nbsp;
+		    <input type="radio" name="rating" value="2" /> &nbsp;
+		    <input type="radio" name="rating" value="3" /> &nbsp;
+		    <input type="radio" name="rating" value="4" /> &nbsp;
+		    <input type="radio" name="rating" value="5" /> &nbsp;
+		    Good                        
+                </div>
+		<!--<div class="field">
+		  <label>Enter the code in the box below:</label>
+		  <input type="text" name="captcha" value="" /><br />
+		  <img src="" alt="" id="captcha" />
+		</div>-->
+		<div class="field">
+                  <a id="button-review" class="button button-alt">Continue</a>
+		</div>
+	    </div>
+	  </div>                
+
+{{end}}

@@ -1,0 +1,18 @@
+{{define "left"}}
+	<aside id="content-left">
+	  <section class="content">
+	    <h2>Info</h2>
+	    <ul class="list">
+	      <li><a href="/info/about">About</a> 
+	      <li><a href="/info/privacy">Privacy</a></li>
+	      <li><a href="/info/terms">Terms</a></li>
+	      <li><a href="/info/contact">Contact</a></li>
+	      <li><a href="/info/news">Latest News</a></li>
+	      <li><a href="/info/site">Site Map </a></li>
+	      <li><a href="/info/payment">Payment </a></li>
+	      <li><a href="/info/shipment">Shipment </a></li>
+	      <li><a href="/info/returns">Returns </a></li>
+            </ul>
+	  </section> 
+	</aside>
+{{end}}

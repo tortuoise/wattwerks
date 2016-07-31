@@ -1,0 +1,14 @@
+{{define "goods_subview"}}
+	  <div id="tabs" class="tabs">
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/desc">Description</a>
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/docs">Docs</a>            
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/revs">Reviews</a>
+	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/rels">Related</a>
+	  </div>
+	  <div id="tab-tags" class="tags standart">
+	    <b>Docs:</b>
+            <p>&nbsp;</p>
+            <a href="{{.Gd.Deets.UrlFile}}" id="docs"> {{.Gd.Deets.UrlFile}} </a>
+            <p>&nbsp;</p>
+	  </div>
+{{end}}
