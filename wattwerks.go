@@ -1054,6 +1054,10 @@ var(
                         http.Error(w, err.Error(), 500)
                         return
                 }
+                gdsession, err := ckstore.Get(r, "goods_path")
+                handle(err)
+                infsession, err := ckstore.Get(r, "info_path")
+                handle(err)
                 var s0 []Good
                 var c0 []Category
                 c0, err = getCategories(c)
@@ -1080,12 +1084,26 @@ var(
                         return
                 }
 		if session.Values["crtd"] == nil {
-                	session.Values["crtd"] = int64(0)
+	                session.Values["crtd"] = int64(0)
 		}
                 data := Render4{"",cs,s0,c0, getCart(c, session.Values["crtd"].(int64), &cs)}
                 session.Values["lggd"] = "Guest"
                 session.Values["crtd"] = int64(0)
-                session.Save(r, w)
+                gdsession.Values["lggd"] = "Guest"
+                gdsession.Values["crtd"] = int64(0)
+                infsession.Values["lggd"] = "Guest"
+                infsession.Values["crtd"] = int64(0)
+                session.Options = &sessions.Options{
+                                        Path:"/account/",
+                                }
+                gdsession.Options = &sessions.Options{
+                                        Path:"/goods/",
+                                }
+                infsession.Options = &sessions.Options{
+                                        Path:"/info/",
+                                }
+                sessions.Save(r, w)
+                //session.Save(r, w)
                 err = tmpl_acc_lgn.ExecuteTemplate(w,"base", data)
                 hndl(err,"handleAccountLogin1")
         }
@@ -1171,7 +1189,19 @@ var(
                         return
                 }
                 session.Values["lggd"] = "Guest"
-                session.Save(r, w)
+                gdsession.Values["lggd"] = "Guest"
+                infsession.Values["lggd"] = "Guest"
+                session.Options = &sessions.Options{
+                                        Path:"/account/",
+                                }
+                gdsession.Options = &sessions.Options{
+                                        Path:"/goods/",
+                                }
+                infsession.Options = &sessions.Options{
+                                        Path:"/info/",
+                                }
+                sessions.Save(r, w)
+                //session.Save(r, w)
                 handleAccountLogin(w,r)
         }
 
@@ -2477,17 +2507,6 @@ var(
                 }
         }
 
-        func makeHandler(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc{
-                return func(w http.ResponseWriter, r *http.Request) { 
-                        m := validPath.FindStringSubmatch(r.URL.Path)
-                        if m == nil {
-                                http.NotFound(w,r)
-                                return
-                        }
-                        fn(w, r) //, m[2])
-                }
-        }
-
 // handlers for info pages
         func handleInfowTemplate(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
                 c := appengine.NewContext(r)
@@ -2556,9 +2575,37 @@ var(
                 }
         }
 
+// root handler & makeHandler
+        func handleRoot(w http.ResponseWriter, r *http.Request) {
+                //c := appengine.NewContext(r)
+                session, err := ckstore.Get(r, "root_path")
+                handle(err)
+                if session.Values["lggd"] != nil {
+                        http.Redirect(w, r, "/account/login", 307)
+                        return
+                }
+                session.Values["lggd"] = "Guest"
+                session.Values["crtd"] = int64(0)
+                session.Options = &sessions.Options{
+                                        Path:"/",
+                                }
+                http.Redirect(w, r, "/account/login", 307)
+        }
+        func makeHandler(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc{
+                return func(w http.ResponseWriter, r *http.Request) { 
+                        m := validPath.FindStringSubmatch(r.URL.Path)
+                        if m == nil {
+                                http.NotFound(w,r)
+                                return
+                        }
+                        fn(w, r) //, m[2])
+                }
+        }
+
 // init
         func init() {
                 r := mux.NewRouter()
+                r.HandleFunc("/", makeHandler(handleRoot)).Methods("GET")
                 s := r.PathPrefix("/admin").Subrouter()
                 //s.HandleFunc("/", makeHandler(handleGoods)).Methods("GET")
                 //s.HandleFunc("/{id}/", makeHandler(handleGood)).Methods("GET")
