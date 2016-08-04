@@ -638,7 +638,7 @@ var(
                 handleGoodsList(w,r)
         }
 
-        func handleGoodsCreate(w http.ResponseWriter, r *http.Request ) { // this function handles conventional GET request, creates struct with form values and stores in datastore
+        func handleGoodsCreate(w http.ResponseWriter, r *http.Request ) { // POSTs json file, creates goods & and stores in datastore
                 c := appengine.NewContext(r)
                 blobs, _, err := blobstore.ParseUpload(r)
                 if err != nil {
@@ -2589,7 +2589,22 @@ var(
                 session.Options = &sessions.Options{
                                         Path:"/",
                                 }
-                http.Redirect(w, r, "/account/login", 307)
+                vars := mux.Vars(r)
+                switch vars["page"] {
+                        case "":
+                                http.Redirect(w, r, "/account/login", 307)
+                                return
+                        case "account":
+                                http.Redirect(w, r, "/account/login", 307)
+                                return
+                        case "promo":
+                                http.Redirect(w, r, "/promo/", 307)
+                                return
+                        default:
+                                http.Redirect(w, r, "/account/login", 307)
+                                return
+
+                }
         }
         func makeHandler(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc{
                 return func(w http.ResponseWriter, r *http.Request) { 
@@ -2605,7 +2620,7 @@ var(
 // init
         func init() {
                 r := mux.NewRouter()
-                r.HandleFunc("/", makeHandler(handleRoot)).Methods("GET")
+                r.HandleFunc("/{page}", makeHandler(handleRoot)).Methods("GET")
                 s := r.PathPrefix("/admin").Subrouter()
                 //s.HandleFunc("/", makeHandler(handleGoods)).Methods("GET")
                 //s.HandleFunc("/{id}/", makeHandler(handleGood)).Methods("GET")
