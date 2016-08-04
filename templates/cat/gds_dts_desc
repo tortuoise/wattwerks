@@ -1,13 +1,37 @@
 {{define "goods_subview"}}
-	  <div id="tabs" class="tabs">
-	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/desc">Description</a>
-	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/docs">Docs</a>            
-	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/revs">Reviews</a>
-	    <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/rels">Related</a>
-	  </div>
-	  <div id="tab-tags" class="tags standart">
-	    <b>Description:</b>
-            <a href="" id="desc"></a>
-            <p>&nbsp;</p>
-	  </div>
+        <div id="tabs" class="tabs">
+                <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/desc">Description</a>
+                <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/docs">Docs</a>            
+                <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/revs">Reviews</a>
+                <a href="/goods/{{.Gd.Category}}/{{.Gd.Subcategory}}/{{.Gd.Id}}/rels">Related</a>
+        </div>
+        <div id="tab-tags" class="tags standart">
+                <!--<b>Description:</b>
+                <a href="" id="desc"></a>-->
+                <p>{{.Gd.Brand}} &nbsp; {{.Gd.Desc}}</p>
+               <h3>{{.Gd.Subcategory}}{{.Gd.Category}}</h3>
+                <p>This 240W microinverter is very efficient and ideal for individual use or for use in an array. Perfect for homes and small areas. </p>
+                <h2>Features:</h2>
+                <ul>
+                        {{range $i,$f := .Gd.Deets.Features}}
+                               <li> {{$f}} </li>
+                        {{end}}
+                </ul>
+                <p>&nbsp;</p>
+                <h2> Parameters:</h2>
+                <ul>
+                        {{$v := .Gd.Deets.ParameterValues}}
+                        {{range $i,$p := .Gd.Deets.ParameterNames}}
+                               <li> {{$p}} : {{index $v $i}}</li>
+                        {{end}}
+                </ul>
+                <p>&nbsp;</p>
+                <h2>  Package Included:</h2>
+                <ul>
+                        {{range $i,$pi := .Gd.Deets.Items}}
+                        <li>$pi</li>
+                        {{end}}
+                </ul>
+                <p> &nbsp;</p>
+	</div>
 {{end}}
