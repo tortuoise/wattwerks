@@ -1,10 +1,12 @@
 package wattwerks
 import (
         _"compress/gzip"
+        "bytes"
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
+	_"encoding/csv"
 	_"errors"
 	"fmt"
 	"html/template"
@@ -22,6 +24,7 @@ import (
 	"appengine/mail"
 	"github.com/gorilla/sessions"
 	"github.com/gorilla/mux"
+        "github.com/tortuoise/csv"
 	"strconv"
 	"strings"
 	"net/url"
@@ -145,15 +148,15 @@ import (
                 Tax float64 `json:"tax,string"`//percent
                 Price float64 `json:"price,string"`
                 Stock int `json:"stock,string"`
-                Related []int64 `json:"related"`
-                Prices []float64 `json:"prices,string"`
-                Volumes []int `json:"volumes,string"`
+                Related []int64 `json:"related" cap:"6"`
+                Prices []float64 `json:"prices" cap:"6"`
+                Volumes []int `json:"volumes" cap:"6"`
                 //PriceVolume map[int]float64 `json:"priceVolume"`
-                ParameterNames []string `json:"parameterNames"`
-                ParameterValues []string `json:"parameterValues"`
+                ParameterNames []string `json:"parameterNames" cap:"12"`
+                ParameterValues []string `json:"parameterValues" cap:"12"`
                 //Parameters map[string]string `json:"parameters"`
-                Features []string `json:"features"`
-                Items []string `json:"items"`
+                Features []string `json:"features" cap:"12"`
+                Items []string `json:"items" cap:"6"`
                 UrlImgs1 string `json:"urlImgs1"`
                 UrlImgs2 string `json:"urlImgs2"`
                 UrlImgs3 string `json:"urlImgs3"`
@@ -246,6 +249,7 @@ var(
 	tmpl_adm_gds_lst = template.Must(template.ParseFiles("templates/adm/goods_list", "templates/adm/cmn/body", "templates/adm/cmn/right", "templates/adm/cmn/center", "templates/adm/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	tmpl_adm_acc_lst = template.Must(template.ParseFiles("templates/adm/acc_list", "templates/adm/cmn/body", "templates/adm/cmn/right", "templates/adm/cmn/center", "templates/adm/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	tmpl_adm_rdrs = template.Must(template.ParseFiles("templates/adm/orders", "templates/adm/cmn/body", "templates/adm/cmn/right", "templates/adm/cmn/center", "templates/adm/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
+	tmpl_adm_err = template.Must(template.ParseFiles("templates/adm/error", "templates/adm/cmn/body", "templates/adm/cmn/right", "templates/adm/cmn/center", "templates/adm/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	tmpl_acc = template.Must(template.ParseFiles("templates/acc/account", "templates/acc/cmn/body", "templates/acc/cmn/right", "templates/acc/cmn/center", "templates/acc/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	tmpl_acc_reg = template.Must(template.ParseFiles("templates/acc/register", "templates/acc/cmn/body", "templates/acc/cmn/right", "templates/acc/cmn/center", "templates/acc/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
 	tmpl_acc_lgn = template.Must(template.ParseFiles("templates/acc/login", "templates/acc/cmn/body", "templates/acc/cmn/right", "templates/acc/cmn/center", "templates/acc/cmn/search", "templates/cmn/base", "templates/cmn/head", "templates/cmn/menu", "templates/cmn/footer"))
@@ -566,7 +570,7 @@ var(
                 handle(err)
         }
 
-        func handleGoodCreate(w http.ResponseWriter, r *http.Request ) { // this function handles conventional GET request, creates struct with form values and stores in datastore
+        func handleGoodCreate(w http.ResponseWriter, r *http.Request ) { // handles POST form creates single Good struct with form values and stores in datastore
                 //c := appengine.NewContext(r)
                 //pd1 := GoodDeets{ DescDetails: "/goods/docs/sma_sb24", Price: 6000.00, Tax: 0.155, Stock: 12, Related:[]int64{}, Prices: []float64{}, Volumes: []int{}, /*PriceVolume: map[int]float64{1:9000.00, 10:7500.00}, Parameters: map[string]string{"Power":"240W","":""},*/ ParameterNames: []string{}, ParameterValues: []string{}, Features: []string{}, Items: []string{}, UrlImgs1:"/imgs/small/sma_240sb.png", UrlImgs2: "/imgs/small/sma_240sb.png", UrlImgs3: "/imgs/small/sma_240sb.png", UrlFile: "/imgs/small/sma_240sb.png"}
                 /*p1 := Good{ Code:"SMA_SB240", Category:"Inverter", Subcategory: "Micro", Brand:"SMA", Desc: "SunnyBoy 240W", Price: 6000.00, Url: "/goods/sma_sb240", Urlimg:"/goods/images/med/sma_sb240.png", Featured: true, Hidden:false, Deets: pd1 }
@@ -656,8 +660,38 @@ var(
                 n, err := rdr.Read(ubs)
                 ubs = ubs[:n]
                 var goods []Good
-                err = json.Unmarshal(ubs, &goods)
-                handle(err)
+                var good Good
+                if string(ubs[0]) == "[" { //json
+                        err = json.Unmarshal(ubs, &goods)
+                        hndl(err, "handleGoodsCreate0")
+                        if err != nil {
+                                handleAccountError(c, w, r, 4, []byte("JSON marshaling error"))
+                                return
+                        }
+                } else {  //csv
+                        /*rc := csv.NewReader(bytes.NewReader(ubs))
+                        rcs, err := rc.ReadAll()
+                        log.Println(rcs)
+                        hndl(err, "handleGoodsCreate1")
+                        err = csvUnmarshal([]byte(""), &goods)
+                        hndl(err, "handleGoodsCreate2")
+                        if err != nil {
+                                handleAccountError(c, w, r, 4, []byte("CSV marshaling error"))
+                                return
+                        }*/
+                        dec := csv.NewDecoder(bytes.NewReader(ubs))
+                        for {
+                                err := dec.DeepUnmarshalCSV(&good)
+                                if err == io.EOF {
+                                        break
+                                } else if err == nil {
+                                        goods = append(goods, good)
+                                } else {
+                                        handleAccountError(c, w, r, 4, []byte("CSV marshaling error"+err.Error()))
+                                        return
+                                }
+                        }
+                }
                 // get counter and find next available id. if problem getting next id then start over at 1
                 ik := datastore.NewKey(c, "counter", "thekey", 0, nil)
                 gi := new(Counter)
@@ -2348,6 +2382,13 @@ var(
                         err = acc_errs[errtyp].ExecuteTemplate(w, "base", data)
                         handle(err)
                         return
+                case 4:
+                        cs,err = getCstmr(c, session.Values["lggd"].(string))
+                        hndl(err, "handleAccountError1")
+                        data := Render4{string(errmsg), cs, s0, c0, getCart(c, session.Values["crtd"].(int64), &cs)}
+                        err = tmpl_adm_err.ExecuteTemplate(w, "base", data)
+                        handle(err)
+                        return
                 default:
                         session.Values["lggd"] = "Guest"
                         session.Values["crtd"] = int64(0)
@@ -3243,6 +3284,57 @@ var(
                 dst := make([]byte, hex.EncodedLen(len(src)))
                 hex.Encode(dst, src)
                 return dst
+        }
+        func csvMarshal(csv []string) *Good {
+                id, err := strconv.ParseInt(csv[0], 10, 64)
+                handle(err)
+                prc, err:= strconv.ParseFloat(csv[6],64)
+                handle(err)
+                ftd, err := strconv.ParseBool(csv[9])
+                handle(err)
+                hdn, err :=  strconv.ParseBool(csv[10])
+                handle(err)
+                tax, err := strconv.ParseFloat(csv[12],64)
+                handle(err)
+                price, err := strconv.ParseFloat(csv[13],64)
+                handle(err)
+                stock, err := strconv.Atoi(csv[14])
+                handle(err)
+                rel1, err := strconv.ParseInt(csv[15], 10, 64)
+                handle(err)
+                rel2, err := strconv.ParseInt(csv[16], 10, 64)
+                handle(err)
+                rel3, err := strconv.ParseInt(csv[17], 10, 64)
+                handle(err)
+                rel4, err := strconv.ParseInt(csv[18], 10, 64)
+                handle(err)
+                rel5, err := strconv.ParseInt(csv[19], 10, 64)
+                handle(err)
+                rel6, err := strconv.ParseInt(csv[20], 10, 64)
+                handle(err)
+                prcs1, err := strconv.ParseFloat(csv[21],64)
+                handle(err)
+                prcs2, err := strconv.ParseFloat(csv[22],64)
+                handle(err)
+                prcs3, err := strconv.ParseFloat(csv[23],64)
+                handle(err)
+                prcs4, err := strconv.ParseFloat(csv[24],64)
+                handle(err)
+                prcs5, err := strconv.ParseFloat(csv[25],64)
+                handle(err)
+                prcs6, err := strconv.ParseFloat(csv[26],64)
+                handle(err)
+                vols1, err := strconv.Atoi(csv[27])
+                vols2, err := strconv.Atoi(csv[28])
+                vols3, err := strconv.Atoi(csv[29])
+                vols4, err := strconv.Atoi(csv[30])
+                vols5, err := strconv.Atoi(csv[31])
+                vols6, err := strconv.Atoi(csv[32])
+                pd1 := GoodDeets{ DescDetails:csv[11], Tax:tax, Price:price, Stock:stock, Related:[]int64{rel1,rel2,rel3,rel4,rel5,rel6}, Prices: []float64{prcs1,prcs2,prcs3,prcs4,prcs5,prcs6}, Volumes: []int{vols1,vols2,vols3,vols4,vols5,vols6}, ParameterNames: []string{csv[33],csv[34],csv[35],csv[36],csv[37],csv[38],csv[39],csv[40],csv[41],csv[42],csv[43],csv[44]}, ParameterValues: []string{csv[45],csv[46],csv[47],csv[48],csv[49],csv[50],csv[51],csv[52],csv[53],csv[54],csv[55],csv[56]}, Features: []string{csv[57],csv[58],csv[59],csv[60],csv[61],csv[62],csv[63],csv[64],csv[65],csv[66],csv[67],csv[68]}, Items: []string{csv[69],csv[70],csv[71],csv[72],csv[73],csv[74]}, UrlImgs1:csv[75], UrlImgs2:csv[76], UrlImgs3:csv[77], UrlFile:csv[78]}
+                return  &Good{ Id: id, Code: csv[1], Category: csv[2], Subcategory: csv[3], Brand: csv[4], Desc: csv[5], Price:prc, Url: csv[7], Urlimg: csv[8], Featured: ftd, Hidden:hdn, Deets: pd1 }
+        }
+        func csvUnmarshal(data []byte, v interface{}) error {
+                return nil
         }
 
 // error handlers

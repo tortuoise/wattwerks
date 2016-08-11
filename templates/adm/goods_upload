@@ -13,9 +13,9 @@
 	  <td>
 	    <div class="field">
 	      <label><span class="required">*</span> FORMAT:</label>
-	      <input type="radio" checked="checked" value="true" name="format">
+	      <input type="radio" checked="checked" value="json" name="format">
 		  JSON&nbsp;&nbsp;
-	      <input type="radio" value="false" name="format">
+	      <input type="radio" value="csv" name="format">
 		  CSV &nbsp;&nbsp;                       
 	    </div>
 	  </td>
