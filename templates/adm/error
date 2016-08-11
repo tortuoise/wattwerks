@@ -1,0 +1,9 @@
+{{define "goods_admin"}}
+
+<table class="table"><th>Id</th><th>Code</th><th>Category</th><th>Subcategory</th><th>Brand</th><th>Price</th><th>Featured</th><th>Action</th>
+	<tbody>
+
+	</tbody>
+</table>
+<p> {{.Message}}</p>
+{{end}}
