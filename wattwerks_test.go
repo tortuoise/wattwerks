@@ -1,4 +1,4 @@
-package wattwerks_test
+package wattwerks
 
 import (
 	_"fmt"
@@ -28,11 +28,17 @@ func TestCSV(t *testing.T) {
 		if len(records) == 0 {
 			t.Errorf("Boo")
 		}
+                gd := csvMarshal(records[1])
+                if gd.Brand != records[1][4]{
+                        t.Errorf("Boo")
+                }
+                if gd.Deets.ParameterValues[0] != records[1][45]{
+                        t.Errorf("Boo")
+                }
 	//}
 }
 
-func handle(err error) {
+//func handle(err error) {
+//	log.Println(err)
+//}
 
-	log.Println(err)
-
-}
