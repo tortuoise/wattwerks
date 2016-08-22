@@ -40,7 +40,7 @@ import (
                 JDte time.Time `json:"jdte"`
                 Confirmed bool `json:"conf"`
         }
-        type Cust struct {
+        /*type Cust struct {
                 Id int64 `json:"id"` // 10,000-99,999
                 Email string `json:"email"`
                 Password string `json:"password"`
@@ -63,7 +63,7 @@ import (
                 Crtid int64 `json:"cartid"` //current cart 100,000-999,999
                 //Crt Cart `json:"cart"`
                 //Rdrs []Order `json:"rdrs"`
-        }
+        }*/
         type Cart struct {
                 Id int64 `json:"id"` // 100,000-999,999
                 Cstid int64 `json:"cstid"`  //completed cart default 0
@@ -124,7 +124,7 @@ import (
                 NxtRdr int64
                 HlsRdr []int64 // incomplete order ids that get returned from PG wo completion/confirmation
         }
-        type Category struct {
+        /*type Category struct {
                 Name string `json:"category"`
                 Subcategories []string `json:"subcategories"`
         }
@@ -165,7 +165,7 @@ import (
         type RelatedGoods struct {
                 Gd Good `json:"good,string"`
                 Rgds []Good `json:"goods,string"`
-        }
+        }*/
 //rendering structs
         type Render struct { //for most purposes
                 Message string `json:"message"`
@@ -178,7 +178,7 @@ import (
                 Cstmr Cust `json:"cstmr"`
                 Goods []Good `json:"goods,string"`
                 Categories []Category `json:"categories,string"`
-                Cstmrs []Cust `json:"cstmrs"`
+                Cstmrs []*Cust `json:"cstmrs"`
         }
         type Render2 struct { //for upload url
                 UpURL *url.URL `json:"upurl,string"`
@@ -1735,7 +1735,6 @@ var(
                                 return
                         }
                 }
-                q0 := datastore.NewQuery("cstmr")
                 var s0 []Good
                 var c0 []Category
                 c0, err = getCategories(c)
@@ -1743,7 +1742,8 @@ var(
                         srvErr(c, w, err)
                         return
                 }
-                var cs []Cust
+                /*var cs []Cust
+                q0 := datastore.NewQuery("cstmr")
                 key, err := q0.GetAll(c, &cs)
                 if err != nil {
                         srvErr(c, w, err)
@@ -1755,7 +1755,19 @@ var(
                         err = tmpl_adm_acc_lst.ExecuteTemplate(w, "base", data)
                         handle(err)
                         return
+                }*/
+                //new
+                ds := &DS{ctx: c}
+                cs, err := ds.ListCusts()
+                if err != nil {
+                        handleAccountError(c, w, r, 4, []byte("Customer list error"))
                 }
+                if cs != nil {
+                        data := Render1 {"",  cc, s0, c0, cs}
+                        err = tmpl_adm_acc_lst.ExecuteTemplate(w, "base", data)
+                        handle(err)
+                        return
+                } //new
                 err = tmpl_adm_acc_lst.ExecuteTemplate(w,"base", "")
                 handle(err)
         }
