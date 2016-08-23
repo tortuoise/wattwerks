@@ -1,7 +1,7 @@
 {{define "goods_admin"}}
 <section class="standart">
   <div class="form-inline">
-    <form id="goods_entry" name="goods_entry" action="/admin/goods/entry/new" accept-charset="utf-8">
+    <form id="goods_entry" name="goods_entry" action="/admin/goods/entry/new" accept-charset="utf-8" method="POST">
       <table>
 	<tr>
 	  <td><h2>Product Basics</h2></td>
@@ -19,7 +19,7 @@
 	    <td>
 	      <div class="field">
 		  <label>Details File Path:</label>
-		  <input type="text" value="" name="descDetails">
+		  <input type="text" value="" name="Deets.descDetails">
 	      </div>
 	    </td>
 	</tr>
@@ -31,7 +31,7 @@
 	    <td>&nbsp;&nbsp;</td>
 	    <td><div class="field">
 		<label><span class="required">*</span> Small Image Url:</label>
-		<input type="text" value="" name="urlImgs">
+		<input type="text" value="" name="Deets.urlImgs">
 	    </div></td>
 	</tr>
 	<tr>
@@ -42,7 +42,7 @@
 	  <td>&nbsp;&nbsp;</td>
 	  <td><div class="field">
 	      <label><span class="required">*</span> Spec Doc Url:</label>
-	      <input type="text" value="" name="urlFile">
+	      <input type="text" value="" name="Deets.urlFile">
 	  </div></td>
 	</tr>
 	<tr>
@@ -72,7 +72,7 @@
 	    <label><span class="required">*</span> Price:</label>
 	    <input type="text" value="" name="price">
 	    <label><span class="required" style="display: none;">*</span> Stock:</label>
-	    <input type="text" value="" name="stock">
+	    <input type="text" value="" name="Deets.stock">
             </div>
 	  </td>
 	  <td>&nbsp;&nbsp;</td>
@@ -98,7 +98,7 @@
 	    <h2>Your Password</h2>
 	    <div class="field">
 	      <label><span class="required">*</span> Password:</label>
-	      <input type="password" value="" name="password">
+	      <!--<input type="password" value="" name="password">-->
 	    </div>
 	  </td>
 	  <td>&nbsp;&nbsp;</td>

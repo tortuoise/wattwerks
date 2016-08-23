@@ -24,6 +24,7 @@ import (
 	"appengine/mail"
 	"github.com/gorilla/sessions"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
         "github.com/tortuoise/csv"
 	"strconv"
 	"strings"
@@ -63,7 +64,7 @@ import (
                 Crtid int64 `json:"cartid"` //current cart 100,000-999,999
                 //Crt Cart `json:"cart"`
                 //Rdrs []Order `json:"rdrs"`
-        }*/
+        }
         type Cart struct {
                 Id int64 `json:"id"` // 100,000-999,999
                 Cstid int64 `json:"cstid"`  //completed cart default 0
@@ -95,7 +96,7 @@ import (
                 IssuerCode string `json:"issuercode "`
                 TxnDateTime string `json:"txndatetime "`
                 IsCOD string `json:"iscod "`
-                /*Details of un-registered buyer*/
+                //Details of un-registered buyer
                 FirstName string `json:"firstname "`
                 LastName string `json:"lastname "`
                 AddressStreet1 string `json:"addressstreet1 "`
@@ -106,7 +107,7 @@ import (
                 AddressCountry string `json:"addresscountry "`
                 MobileNo string `json:"mobileno "`
                 Email string `json:"email "`
-                /*user account if buyer registered*/
+                //user account if buyer registered
                 //Buyer *Cust //`json:"buyer"`
                 //Cart Cart `json:"cart"`
                 ReqTime time.Time `json:"reqTime"`
@@ -124,7 +125,7 @@ import (
                 NxtRdr int64
                 HlsRdr []int64 // incomplete order ids that get returned from PG wo completion/confirmation
         }
-        /*type Category struct {
+        type Category struct {
                 Name string `json:"category"`
                 Subcategories []string `json:"subcategories"`
         }
@@ -571,78 +572,126 @@ var(
         }
 
         func handleGoodCreate(w http.ResponseWriter, r *http.Request ) { // handles POST form creates single Good struct with form values and stores in datastore
-                //c := appengine.NewContext(r)
-                //pd1 := GoodDeets{ DescDetails: "/goods/docs/sma_sb24", Price: 6000.00, Tax: 0.155, Stock: 12, Related:[]int64{}, Prices: []float64{}, Volumes: []int{}, /*PriceVolume: map[int]float64{1:9000.00, 10:7500.00}, Parameters: map[string]string{"Power":"240W","":""},*/ ParameterNames: []string{}, ParameterValues: []string{}, Features: []string{}, Items: []string{}, UrlImgs1:"/imgs/small/sma_240sb.png", UrlImgs2: "/imgs/small/sma_240sb.png", UrlImgs3: "/imgs/small/sma_240sb.png", UrlFile: "/imgs/small/sma_240sb.png"}
-                /*p1 := Good{ Code:"SMA_SB240", Category:"Inverter", Subcategory: "Micro", Brand:"SMA", Desc: "SunnyBoy 240W", Price: 6000.00, Url: "/goods/sma_sb240", Urlimg:"/goods/images/med/sma_sb240.png", Featured: true, Hidden:false, Deets: pd1 }
-                if _, err := datastore.Put(c, datastore.NewIncompleteKey(c,"product", nil), &p1); err != nil {
-                        http.Error(w, err.Error(), http.StatusInternalServerError)
-                        return
-                }
-                if _, err := datastore.Put(c, datastore.NewIncompleteKey(c,"productdeets", nil), &pd1); err != nil {
-                        http.Error(w, err.Error(), http.StatusInternalServerError)
-                        return
-                }
-                err := tmpl_adm_gds_ntr.ExecuteTemplate(w,"front", "")
-                handle(err)*/
                 c := appengine.NewContext(r)
-                // get counter and find next available id. if problem getting next id then start over at 1
-                ik := datastore.NewKey(c, "counter", "thekey", 0, nil)
+                err := r.ParseForm()
+                handle(err)
+                /*OLD
+                        // get counter and find next available id. if problem getting next id then start over at 1
+                        ik := datastore.NewKey(c, "counter", "thekey", 0, nil)
+                        gi := new(Counter)
+                        if err := datastore.Get(c, ik, gi); err != nil {
+                                gi.TtlGd = 0
+                                gi.NxtGd = 1001
+                                gi.TtlCst = 0
+                                gi.NxtCst = 10001
+                                gi.TtlRdr = 0
+                                gi.NxtRdr = 1000001
+                                if _, err1 := datastore.Put(c, ik, gi); err1 != nil {
+                                        http.Error(w, err.Error(), 500)
+                                        return
+                                }
+                        }
+                        // get posted form data
+                        v := r.Form
+                        price, err := strconv.ParseFloat(v.Get("price"), 64)
+                        handle(err)
+                        //tax, err := strconv.ParseFloat(v.Get("tax"), 64)
+                        //handle(err)
+                        stock, err := strconv.Atoi(v.Get("stock"))
+                        handle(err)
+                        featured, err := strconv.ParseBool(v.Get("featured"))
+                        handle(err)
+                        hidden, err := strconv.ParseBool(v.Get("hidden"))
+                        handle(err)
+                        //create GoodDeets and Good
+                        pd1 := GoodDeets{ DescDetails: v.Get("descDetails"), Price: price, Tax: 0.155, Stock: stock, Related:[]int64{}, Prices: []float64{}, Volumes: []int{}, ParameterNames: []string{}, ParameterValues: []string{}, Features: []string{}, Items: []string{}, UrlImgs1: v.Get("urlImgs") , UrlImgs2: v.Get("urlImgs"), UrlImgs3: v.Get("urlImgs"), UrlFile: v.Get("urlFile")}
+                        p1 := Good{ Id: gi.NxtGd, Code:v.Get("code"), Category: v.Get("category"), Subcategory: v.Get("subcategory"), Brand: v.Get("brand"), Desc: v.Get("desc"), Price: price, Url: v.Get("url"), Urlimg:v.Get("urlImg"), Featured: featured, Hidden: hidden, Deets: pd1 }
+                        pk := datastore.NewKey(c, "product", "", gi.NxtGd, nil)
+                        handle(err)
+                        if _, err := datastore.Put(c, pk, &p1); err != nil {
+                                http.Error(w, err.Error(), http.StatusInternalServerError)
+                                err := tmpl_cmn.ExecuteTemplate(w,"problem", "")
+                                handle(err)
+                                return
+                        }
+                        if _, err := datastore.Put(c, datastore.NewKey(c,"productdeets","", gi.NxtGd+10000000, pk), &pd1); err != nil {
+                                http.Error(w, err.Error(), http.StatusInternalServerError)
+                                err := tmpl_cmn.ExecuteTemplate(w,"problem", "")
+                                handle(err)
+                                return
+                        } 
+                OLD*/
+                //new
+                var s0 []Good
+                c0, err := getCategories(c)
+                if err != nil {
+                        srvErr(c, w, err)
+                        return
+                }
+                cc, err := getCstmr1(c, w, r)
+                if err != nil {
+                        srvErr(c, w, err)
+                        return
+                }
+                adsc := &DS{ctx:c}
                 gi := new(Counter)
-                if err := datastore.Get(c, ik, gi); err != nil {
+                err = adsc.Get(gi)
+                if err != nil {
                         gi.TtlGd = 0
                         gi.NxtGd = 1001
                         gi.TtlCst = 0
                         gi.NxtCst = 10001
                         gi.TtlRdr = 0
                         gi.NxtRdr = 1000001
-                        if _, err1 := datastore.Put(c, ik, gi); err1 != nil {
-                                http.Error(w, err.Error(), 500)
+                        if _, err = adsc.Add(gi); err != nil {
+                                log.Println(err)
+                                data := Render {"Counter problem", cc, s0, c0 }
+                                err = tmpl_adm_err.ExecuteTemplate(w,"base", data)
+                                handle(err)
                                 return
                         }
                 }
-                // get posted form data
-                err := r.ParseForm()
-                handle(err)
-                v := r.Form
-                price, err := strconv.ParseFloat(v.Get("price"), 64)
-                handle(err)
-                //tax, err := strconv.ParseFloat(v.Get("tax"), 64)
-                //handle(err)
-                stock, err := strconv.Atoi(v.Get("stock"))
-                handle(err)
-                featured, err := strconv.ParseBool(v.Get("featured"))
-                handle(err)
-                hidden, err := strconv.ParseBool(v.Get("hidden"))
-                handle(err)
-                //create GoodDeets and Good
-                pd1 := GoodDeets{ DescDetails: v.Get("descDetails"), Price: price, Tax: 0.155, Stock: stock, Related:[]int64{}, Prices: []float64{}, Volumes: []int{}, ParameterNames: []string{}, ParameterValues: []string{}, Features: []string{}, Items: []string{}, UrlImgs1: v.Get("urlImgs") , UrlImgs2: v.Get("urlImgs"), UrlImgs3: v.Get("urlImgs"), UrlFile: v.Get("urlFile")}
-                p1 := Good{ Id: gi.NxtGd, Code:v.Get("code"), Category: v.Get("category"), Subcategory: v.Get("subcategory"), Brand: v.Get("brand"), Desc: v.Get("desc"), Price: price, Url: v.Get("url"), Urlimg:v.Get("urlImg"), Featured: featured, Hidden: hidden, Deets: pd1 }
-                pk := datastore.NewKey(c, "product", "", gi.NxtGd, nil)
-                handle(err)
-                if _, err := datastore.Put(c, pk, &p1); err != nil {
-                        http.Error(w, err.Error(), http.StatusInternalServerError)
-                        err := tmpl_cmn.ExecuteTemplate(w,"problem", "")
+                p1 := &Good{Id: gi.NxtGd, }
+                decoder := schema.NewDecoder()
+                err = decoder.Decode(p1, r.PostForm)
+                pd1 := p1.Deets
+                if err != nil {
+                        log.Println(err)
+                        data := Render {"", cc, s0, c0 }
+                        err = tmpl_adm_gds_ntr.ExecuteTemplate(w,"base", data)
                         handle(err)
-                        return
                 }
-                if _, err := datastore.Put(c, datastore.NewKey(c,"productdeets","", gi.NxtGd+10000000, pk), &pd1); err != nil {
-                        http.Error(w, err.Error(), http.StatusInternalServerError)
-                        err := tmpl_cmn.ExecuteTemplate(w,"problem", "")
+                if err := adsc.AddwParent(p1, &pd1, 1e7); err != nil {
+                        log.Println(err)
+                        data := Render {"", cc, s0, c0 }
+                        err = tmpl_adm_gds_ntr.ExecuteTemplate(w,"base", data)
                         handle(err)
-                        return
                 }
+                /*if _, err := adsc.Add(p1, p1.Id); err != nil {
+                        log.Println(err)
+                        data := Render {"", cc, s0, c0 }
+                        err = tmpl_adm_gds_ntr.ExecuteTemplate(w,"base", data)
+                        handle(err)
+                }*/
+                //new
                 gi.NxtGd++
                 gi.TtlGd++
-                if _, err := datastore.Put(c, ik, gi); err != nil {
-                        http.Error(w, err.Error(), http.StatusInternalServerError)
-                        err := tmpl_cmn.ExecuteTemplate(w,"problem", "")
+                //if _, err := datastore.Put(c, ik, gi); err != nil {
+                if _, err := adsc.Add(gi); err != nil {
+                        log.Println(err)
+                        data := Render {"Counter problem", cc, s0, c0 }
+                        err = tmpl_adm_err.ExecuteTemplate(w,"base", data)
                         handle(err)
                         return
+                        /*http.Error(w, err.Error(), http.StatusInternalServerError)
+                        err := tmpl_cmn.ExecuteTemplate(w,"problem", "")
+                        handle(err)
+                        return*/
                 }
                 handleGoodsList(w,r)
         }
 
-        func handleGoodsCreate(w http.ResponseWriter, r *http.Request ) { // POSTs json file, creates goods & and stores in datastore
+        func handleGoodsCreate(w http.ResponseWriter, r *http.Request ) { // POSTs json/csv file, creates goods & and stores in datastore
                 c := appengine.NewContext(r)
                 blobs, _, err := blobstore.ParseUpload(r)
                 if err != nil {
@@ -2685,7 +2734,7 @@ var(
                 s.HandleFunc("/goods/upload", makeHandler(handleGoodsEntry)).Methods("GET")
                 s.HandleFunc("/goods/upload", makeHandler(handleGoodsCreate)).Methods("POST")
                 s.HandleFunc("/accounts", makeHandler(handleAccountList)).Methods("GET")
-                s.HandleFunc("/goods/entry/new", makeHandler(handleGoodCreate)).Methods("GET")
+                s.HandleFunc("/goods/entry/new", makeHandler(handleGoodCreate)).Methods("POST")
                 s.HandleFunc("/orders", makeHandler(handleOrdersList)).Methods("GET")
                 //s.HandleFunc("/entry/new", makeHandler(handleGoodCreateJS)).Methods("POST")
                 //s.HandleFunc("/entry/new1", makeHandler(handleGoodCreateJS1)).Methods("POST")
@@ -3142,7 +3191,6 @@ var(
         }
 
         func getCart(c appengine.Context, crtd int64, cst *Cust) Cart {
-                log.Println("Getting: ", crtd, cst.Firstname)
                 q := datastore.NewQuery("cart").Filter("Id = ", crtd)
                 var crt []Cart
                 var crtr Cart
