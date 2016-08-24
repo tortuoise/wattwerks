@@ -125,7 +125,7 @@ func (ds *DS) Add(v interface{}, n ...int64) (int64, error) {
         }
         _, err := datastore.Put(c, k, v)
         if err != nil {
-                return 0, fmt.Errorf("Add error - datastore put error")
+                return 0, fmt.Errorf("Add error - datastore put error: %v", err)
         }
         return k.IntID(), nil
 
@@ -216,7 +216,7 @@ func (ds *DS) Get(v interface{}) error {
         if _, ok := reflect.TypeOf(v).Elem().FieldByName("Id"); ok {
                 id = reflect.ValueOf(v).Elem().Field(0).Interface().(int64)  // could also use FieldByName("Id") instead of Field(0)
                 if id == 0 { // shouldn't be zero
-                        return fmt.Errorf("Get error - id not set")
+                        return DSErr{When: time.Now(), What: "Get error: id not set",}
                 }
                 k = ds.dsKey(reflect.TypeOf(v).Elem(), id)  //complete key
         } else {
@@ -228,8 +228,9 @@ func (ds *DS) Get(v interface{}) error {
                 return fmt.Errorf("Get error - key create error")
         }
 
-        if err := datastore.Get(c, k, reflect.ValueOf(v).Interface()); err != nil {
-                return fmt.Errorf("Get error - datastore get error")
+        //if err := datastore.Get(c, k, reflect.ValueOf(v).Interface()); err != nil {
+        if err := datastore.Get(c, k, v); err != nil {
+                return fmt.Errorf("Get error - datastore get error: %v, key kind: %v",err, k.Kind())
         }
         return nil
 
