@@ -692,6 +692,9 @@ var(
         }
 
         func handleGoodsCreate(w http.ResponseWriter, r *http.Request ) { // POSTs json/csv file, creates goods & and stores in datastore
+                log.Println(r.Method, r.URL.String(), r.Proto )
+                log.Println(r.Header)
+                log.Println(r.Body)
                 c := appengine.NewContext(r)
                 blobs, _, err := blobstore.ParseUpload(r)
                 if err != nil {
@@ -782,6 +785,22 @@ var(
                         return
                 }
                 //http.Redirect(w, r, "
+                handleGoodsList(w,r)
+        }
+        func handleGoodsCreateCc(w http.ResponseWriter, r *http.Request) { // POSTs json/csv file, creates goods & and stores in datastore
+                c := appengine.NewContext(r)
+                bs := &BS{ctx: c}
+                ubs, err := bs.ParseUpload(r, "file")
+                if err != nil {
+                        log.Println(err)
+                        //handleAccountError(c, w, r, 4, []byte("Couldn't parse uploaded file"))
+                }
+                log.Println("length: ", len(ubs))
+                err = bs.UnmarshalCSV(ubs, 2)
+                if err != nil {
+                        log.Println(err)
+                        //handleAccountError(c, w, r, 4, []byte("Couldn't parse uploaded file"))
+                }
                 handleGoodsList(w,r)
         }
 
@@ -2732,7 +2751,7 @@ var(
                 s.HandleFunc("/goods/json", makeHandler(handleGoodsListJSON)).Methods("GET")
                 s.HandleFunc("/goods/entry", makeHandler(handleGoodEntry)).Methods("GET")
                 s.HandleFunc("/goods/upload", makeHandler(handleGoodsEntry)).Methods("GET")
-                s.HandleFunc("/goods/upload", makeHandler(handleGoodsCreate)).Methods("POST")
+                s.HandleFunc("/goods/upload", makeHandler(handleGoodsCreateCc)).Methods("POST")
                 s.HandleFunc("/accounts", makeHandler(handleAccountList)).Methods("GET")
                 s.HandleFunc("/goods/entry/new", makeHandler(handleGoodCreate)).Methods("POST")
                 s.HandleFunc("/orders", makeHandler(handleOrdersList)).Methods("GET")
