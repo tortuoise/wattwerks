@@ -41,7 +41,7 @@ type GoodDeets struct {
         UrlImgs1 string `json:"urlImgs1" schema:"urlImgs"`
         UrlImgs2 string `json:"urlImgs2" schema:"-"`
         UrlImgs3 string `json:"urlImgs3" schema:"-"`
-        UrlFile string `json:"urlFile" schema:urlFile"`
+        UrlFile string `json:"urlFile" schema:"urlFile"`
 }
 type RelatedGoods struct {
         Gd Good `json:"good,string"`

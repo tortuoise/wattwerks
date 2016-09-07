@@ -42,30 +42,17 @@ func TestBlob(t *testing.T) {
 		"description": "csv file",
 	}
 
-	/*request, err := newfileUploadRequest(url.String(), extraParams, "file", path)
-	if err != nil {
-		t.Fatal(err)
-	}
-	client := &http.Client{}
-	resp, err := client.Do(request)*/
-
-	req, err := newInstRequest(inst, url.String(), extraParams, "file", path)
+	req, err := newInstRequest(inst, url.String(), extraParams, "file", "products_no_header.csv")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	t.Errorf("Header:%v ", req.Header)
-	//subs := make([]byte, 1000)
-	//_,_ = req.Body.Read(subs)
-	//t.Errorf("Subs %v", string(subs))
-
-	//if err != nil {
-	//        t.Fatal(err)
-	//}
 	w := httptest.NewRecorder()
-	handleGoodsCreateCc(w, req)
+	//client := &http.Client{}
+	//_, err = client.Do(req)   // client.Do(req) just blocks in testing!
+	handleGoodsCreateCc(w, req) //comment out handleGoodsList(w, r) & handleAccountError(...) in handler
 
-	t.Errorf("%s ~ %s ~ %s", url.String(), w.Body.String())
+	//t.Errorf("%s ~  ~ ", url.String(), w.Body)
 	//t.Errorf("%s ~ %s ~ %s", url.String(), resp.Status, resp.Body)
 
 }
@@ -107,71 +94,30 @@ func newInstRequest(inst aetest.Instance, uri string, params map[string]string, 
 		return nil, err
 	}
 
-	/*body := &bytes.Buffer{}
-	  writer := multipart.NewWriter(body)
-	  part, err := writer.CreateFormFile(paramName, filepath.Base(path))
-	  if err != nil {
-	          return nil, err
-	  }
-
-	  _, err = io.Copy(part, file)
-
-	  for k,v := range params {
-	          _ = writer.WriteField(k, v)
-	  }
-	  err = writer.Close()
-	  if err != nil {
-	          return nil, err
-	  }
-	  req, err := inst.NewRequest("POST", uri, body)
-	  req.Header.Set("Content-Type", writer.FormDataContentType())
-	  return req, err*/
-	fmt.Println(filepath.Base(path))
-
 	r, w := io.Pipe()
-	multiWriter := multipart.NewWriter(w)
-	_ = multiWriter.SetBoundary("doofus")
-	go func() {
-		defer file.Close()
-		defer w.Close()
-		part, err := multiWriter.CreateFormFile(paramName, filepath.Base(path))
-		if err != nil {
-			return
-		}
-		if _, err := io.Copy(part, file); err != nil {
-			return
-		}
-		for k, v := range params {
-			if err := multiWriter.WriteField(k, v); err != nil {
-				return
-			}
-		}
-		if err := multiWriter.Close(); err != nil {
-			return
-		}
-	}()
+	go streamingUploadFile(params, paramName, path, w, file)
 	req, err := inst.NewRequest("POST", uri, r)
-	req.Header.Set("Content-Type", multiWriter.FormDataContentType())
-	//req.Header.Set("Content-Type", "multipart/form-data; boundary=doofus")
+	//req.Header.Set("Content-Type", multiWriter.FormDataContentType())
+	req.Header.Set("Content-Type", "multipart/form-data; boundary=doofus")
 	return req, err
 }
 
 // Streams upload directly from file -> mime/multipart -> pipe -> http-request
-func streamingUploadFile(params map[string]string, paramName, path string, w *io.PipeWriter, file *os.File, sc chan string) error {
+func streamingUploadFile(params map[string]string, paramName, path string, w *io.PipeWriter, file *os.File) {
 	defer file.Close()
 	defer w.Close()
 	writer := multipart.NewWriter(w)
 	part, err := writer.CreateFormFile(paramName, filepath.Base(path))
 	if err != nil {
-		sc <- "ERROR"
-		return fmt.Errorf("Upload error: %v", err)
+		fmt.Println(err)
 	}
 	_, err = io.Copy(part, file)
 	if err != nil {
-		sc <- "ERROR"
-		return fmt.Errorf("Upload error: %v", err)
+		fmt.Println(err)
+                return
+		//return fmt.Errorf("Upload error: %v", err)
 	}
-	sc <- writer.FormDataContentType()
+	//sc <- writer.FormDataContentType()
 
 	for key, val := range params {
 		_ = writer.WriteField(key, val)
@@ -179,10 +125,10 @@ func streamingUploadFile(params map[string]string, paramName, path string, w *io
 
 	err = writer.Close()
 	if err != nil {
-		sc <- "ERROR"
-		return fmt.Errorf("Upload error: %v", err)
+		//return fmt.Errorf("Upload error: %v", err)
+		fmt.Println(err)
+                return
 	}
-	return nil
 }
 
 // Creates a new file upload http request with optional extra params

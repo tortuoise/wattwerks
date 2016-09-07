@@ -10,3 +10,6 @@ https://github.com/astaxie/beegae/issues/15
 https://github.com/gebi/go-fileupload-example
 
 https//cloud.google.com/appengine/docs/go/tools/localunittesting/
+
+1. Can't read & write from same buffer - use pipe to tie reader and writer
+2. Run reading and writing in separate goroutines because readers will attempt to read header immediately resulting in deadlock

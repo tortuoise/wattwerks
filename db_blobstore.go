@@ -84,11 +84,11 @@ func (bs *BS) UnmarshalCSV(data []byte, n int) error {
                                 na ++
                                 return persist(c, sc, good, na)
 
-                        }, nil)
+                        }, &datastore.TransactionOptions{XG: true})
                         if err != nil {
                                 sc <- fmt.Sprintf("%s: failure %v\n", id, err)
                         } else {
-                                sc <- fmt.Sprintf("%s: success %v\n", id)
+                                sc <- fmt.Sprintf("%s: success %v\n", id, good.Id)
                         }
 
                         done <- true
@@ -109,14 +109,36 @@ func (bs *BS) UnmarshalCSV(data []byte, n int) error {
 func persist(c appengine.Context, sc chan string, good Good, na int) error {
 
         ds := &DS{ctx:c}
+        gi := new(Counter)
+        err := ds.Get(gi)
+        if err != nil {
+                gi.TtlGd = 0
+                gi.NxtGd = 1001
+                gi.TtlCst = 0
+                gi.NxtCst = 10001
+                gi.TtlRdr = 0
+                gi.NxtRdr = 1000001
+                if _, err = ds.Add(gi); err != nil {
+                        log.Println(err)
+                        return BSErr{When: time.Now(), What: "Couldn't persist" + err.Error()}
+                }
+        }
+        good.Id = gi.NxtGd
         if err := ds.AddwParent(&good, &good.Deets, 1e7); err != nil {
                 return BSErr{When: time.Now(), What: "Couldn't persist" + err.Error()}
+        }
+        gi.NxtGd++
+        gi.TtlGd++
+        if _, err := ds.Add(gi); err != nil {
+                log.Println(err)
+                return BSErr{When: time.Now(), What: "Couldn't persist counter" + err.Error()}
         }
         return nil
 }
 
-func (bs *BS) UnmarshalJSON() {
+func (bs *BS) UnmarshalJSON(data []byte ) error {
 
+        return nil
 
 }
 

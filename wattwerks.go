@@ -6,8 +6,8 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
-	_"encoding/csv"
-	_"errors"
+	_ "encoding/csv"
+	"errors"
 	"fmt"
 	"html/template"
 	"io"
@@ -41,132 +41,6 @@ import (
                 JDte time.Time `json:"jdte"`
                 Confirmed bool `json:"conf"`
         }
-        /*type Cust struct {
-                Id int64 `json:"id"` // 10,000-99,999
-                Email string `json:"email"`
-                Password string `json:"password"`
-                Firstname string `json:"firstname"`
-                Lastname string `json:"lastname"`
-                Birthdate time.Time `json:"birthdate"`
-                Meterid int64 `json:"meterid"`
-                Addr string `json:"addr"`
-                Street string `json:"street"`
-                Area string `json:"area"`
-                City string `json:"city"`
-                Postcode string `json:"postcode"`
-                State string `json:"state"`
-                Country string `json:"country"`
-                Phone string `json:"phone"`
-                Indi bool `json:"indi"` //Individual or not (company)
-                Company string `json:"company"`
-                Vat string `json:"vat"`
-                Pmtmethod string `json:"pmtmethod"`
-                Crtid int64 `json:"cartid"` //current cart 100,000-999,999
-                //Crt Cart `json:"cart"`
-                //Rdrs []Order `json:"rdrs"`
-        }
-        type Cart struct {
-                Id int64 `json:"id"` // 100,000-999,999
-                Cstid int64 `json:"cstid"`  //completed cart default 0
-                Ids []int64 `json:"items"` //Good Ids
-                Qntts []int `json:"qntts"`
-                Prchsd bool `json:"purchased"`
-                Ttls []float64 `json:"ttls"`
-                Txs float64 `json:"txs"`
-                Ttl float64 `json:"total"`
-        }
-        type Order struct{
-                Id int64 `json:"id"` //1,000,000-9,999,999
-                TxId string `json:"txid"`
-                TxRefNo string `json:"txrefno"`
-                TxStatus string `json:"txstatus"`
-                TxMsg string `json:"txmsg"`
-                PgTxnNo string `json:"pgtxnno"`
-                IssuerRefNo string `json:"issuerrefno"`
-                AuthIdCode string `json:"authidcode"`
-                PgRespCode string `json:"pgrespcode"`
-                OriginalAmount string `json:"originalamount "`
-                AdjustedAmount string `json:"adjustedamount "`
-                DpRuleName string `json:"dprulename "`
-                DpRuleType string `json:"dpruletype "`
-                Amount string `json:"amount "`
-                TransactionAmount string `json:"transactionamount "`
-                PaymentMode string `json:"paymentmode "`
-                TxGateway string `json:"txgateway "`
-                IssuerCode string `json:"issuercode "`
-                TxnDateTime string `json:"txndatetime "`
-                IsCOD string `json:"iscod "`
-                //Details of un-registered buyer
-                FirstName string `json:"firstname "`
-                LastName string `json:"lastname "`
-                AddressStreet1 string `json:"addressstreet1 "`
-                AddressStreet2 string `json:"addressstreet2 "`
-                AddressFirstName string `json:"addressfirstname "`
-                AddressZip string `json:"addresszip "`
-                AddressState string `json:"addressstate "`
-                AddressCountry string `json:"addresscountry "`
-                MobileNo string `json:"mobileno "`
-                Email string `json:"email "`
-                //user account if buyer registered
-                //Buyer *Cust //`json:"buyer"`
-                //Cart Cart `json:"cart"`
-                ReqTime time.Time `json:"reqTime"`
-                SecSign string `json:"secSign"`
-                Cstid int64 `json:"cstid"`  //completed cart buyer
-                Crtid int64 `json:"cartid"` //completed cart id
-                Notified bool `json:"boolean"`
-        }
-        type Counter struct {
-                TtlGd int64 // 1000-9999
-                NxtGd int64 // next lowest available ID
-                TtlCst int64 // 10,000-99,999
-                NxtCst int64
-                TtlRdr int64
-                NxtRdr int64
-                HlsRdr []int64 // incomplete order ids that get returned from PG wo completion/confirmation
-        }
-        type Category struct {
-                Name string `json:"category"`
-                Subcategories []string `json:"subcategories"`
-        }
-        type Good struct {
-                Id int64 `json:"id,string"` //1,000-9,999
-                Code string `json:"code"`
-                Category string `json:"category"`
-                Subcategory string `json:"subCategory"`
-                Brand string `json:"brand"`
-                Desc string `json:"desc"`
-                Price float64 `json:"price,string"`
-                Url string `json:"url"`
-                Urlimg string `json:"urlImg"`
-                Featured bool `json:"featured,string"`
-                Hidden bool `json:"hidden,string"`
-                Deets GoodDeets `json:"goodDeets"`
-        }
-        type GoodDeets struct {
-                //Id int64 `json:"id"`
-                DescDetails string `json:"descDetails"`//path to file with details
-                Tax float64 `json:"tax,string"`//percent
-                Price float64 `json:"price,string"`
-                Stock int `json:"stock,string"`
-                Related []int64 `json:"related" cap:"6"`
-                Prices []float64 `json:"prices" cap:"6"`
-                Volumes []int `json:"volumes" cap:"6"`
-                //PriceVolume map[int]float64 `json:"priceVolume"`
-                ParameterNames []string `json:"parameterNames" cap:"12"`
-                ParameterValues []string `json:"parameterValues" cap:"12"`
-                //Parameters map[string]string `json:"parameters"`
-                Features []string `json:"features" cap:"12"`
-                Items []string `json:"items" cap:"6"`
-                UrlImgs1 string `json:"urlImgs1"`
-                UrlImgs2 string `json:"urlImgs2"`
-                UrlImgs3 string `json:"urlImgs3"`
-                UrlFile string `json:"urlFile"`
-        }
-        type RelatedGoods struct {
-                Gd Good `json:"good,string"`
-                Rgds []Good `json:"goods,string"`
-        }*/
 //rendering structs
         type Render struct { //for most purposes
                 Message string `json:"message"`
@@ -287,9 +161,11 @@ var(
 	acc_errs = map[int]*template.Template{1:tmpl_acc_lgn_err, 2:tmpl_acc_reg_err, 3:tmpl_acc_edt_err, 4:tmpl_acc_rnd_err}
 	//gd_errs = map[int]*template.Template{1:tmpl_cat_stk_err, 2:tmpl_cat_prc_err, 3:tmpl_cat_edt_err}
 	states = map[string]string{"1475":"Andaman and Nicobar Islands","1476":"Andhra Pradesh","1477":"Arunachal Pradesh","1478":"Assam","1479":"Bihar","1480":"Chandigarh","3970":"Chhattisgarh","1481":"Dadra and Nagar Haveli","1482":"Daman and Diu","1483":"Delhi","1484":"Goa","1485":"Gujarat","1486":"Haryana","1487":"Himachal Pradesh","1488":"Jammu and Kashmir","3971":"Jharkhand","1489":"Karnataka","1490":"Kerala","1491":"Lakshadweep Islands","1492":"Madhya Pradesh","1493":"Maharashtra","1494":"Manipur","1495":"Meghalaya","1496":"Mizoram","1497":"Nagaland","1498":"Orissa","1499":"Pondicherry","1500":"Punjab","1501":"Rajasthan","1502":"Sikkim","1503":"Tamil Nadu","1504":"Tripura","1505":"Uttar Pradesh","3972":"Uttarakhand","1506":"West Bengal"}
-	accessKey = "6ZUW285028D82TW1ELKT";
-	secretKey = []byte("d20fc029ba8300c06443cb94a83b36db88fa7c67");
-        merchantId = []byte("592cfpvxpr")
+	accessKey = "xxxxxxxxxxxxxxxxx";
+	secretKey = []byte("xxxxxxxxxxxxxxxxxxx");
+        merchantId = []byte("xxxxxxxxx")
+        dflt_ctgrs = []Category{Category{Name: "Inverter", Subcategories: []string{"Central","Micro","String"}}}
+        dflt_cstmr = Cust{Firstname: "Guest"}
         ccy = []byte("INR")
 )
 // utils
@@ -520,12 +396,13 @@ var(
                         return
                 }
                 if key != nil {
-                        gds, err := json.Marshal(s0)
-                        handle(err)
                         w.Header().Set("Content-Type", "text/plain")
-                        io.WriteString(w, string(gds))
-                        //err = tmpl_adm_gds_lst.ExecuteTemplate(w, "admin", s0)
-                        //err = tmpl_adm_gds_lst.ExecuteTemplate(w, "admin", data)
+                        encdr := json.NewEncoder(w)
+                        if err := encdr.Encode(&s0); err != nil {
+                                c.Infof("Error decoding request %v", r)
+                                http.Error(w, err.Error(), http.StatusBadRequest)
+                                return
+                        }
                         return
                 }
                 //err = tmpl_adm_gds_lst.ExecuteTemplate(w,"admin", "")
@@ -793,13 +670,13 @@ var(
                 ubs, err := bs.ParseUpload(r, "file")
                 if err != nil {
                         log.Println(err)
-                        //handleAccountError(c, w, r, 4, []byte("Couldn't parse uploaded file"))
+                        handleAccountError(c, w, r, 4, []byte("Couldn't parse uploaded file"))
                 }
                 log.Println("length: ", len(ubs))
                 err = bs.UnmarshalCSV(ubs, 2)
                 if err != nil {
                         log.Println(err)
-                        //handleAccountError(c, w, r, 4, []byte("Couldn't parse uploaded file"))
+                        handleAccountError(c, w, r, 4, []byte("Couldn't parse uploaded file"))
                 }
                 handleGoodsList(w,r)
         }
@@ -940,28 +817,6 @@ var(
         }
 
         /*
-        func handleGoodError(c appengine.Context, w http.ResponseWriter, r *http.Request, errtyp int, errmsg []byte) {
-                var s0 []Good
-                var c0 []Category
-                c0, err := getCategories(c)
-                if err != nil {
-                        srvErr(c, w, err)
-                        return
-                }
-                cs, err := getCstmr(c, "Guest")
-                if err != nil {
-                        srvErr(c, w, err)
-                        return
-                }
-                session, err := ckstore.Get(r, "admin_path")
-                handle(err)
-                session.Values["lggd"] = "Guest"
-                session.Save(r, w)
-                data := Render{string(errmsg), cs, s0,c0}
-                err = gd_errs[errtyp].ExecuteTemplate(w, "base", data)
-                handle(err)
-                return
-        }
 
         func handleGoodEditPostJS(w http.ResponseWriter, r *http.Request ) { // this function handles json post data, marshals into struct and stores in datastore
                 c := appengine.NewContext(r)
@@ -1320,7 +1175,7 @@ var(
                         default:
                                 cstmr,err := getCstmr(c, lggd)
                                 hndl(err, "handleAccountEdit1")
-                                if cstmr.Firstname != "Guest" || cstmr.Firstname != "" {
+                                if cstmr.Firstname != "Guest" && cstmr.Firstname != "" {
                                         handleAccountwTemplate(w, r, tmpl_acc_edt, cstmr)
                                         return
                                 }
@@ -2568,9 +2423,12 @@ var(
                 c := appengine.NewContext(r)
                 vars := mux.Vars(r)
                 ctg,_ := vars["category"]
-                //handle(err)
                 sctgs, err := getSubcats(c,ctg)
-                handle(err)
+                if err != nil {
+                        handleNotFound(c, w, r)
+                        //err = tmpl_cmn.ExecuteTemplate(w, "base", nil)
+                        return
+                }
                 handleCatalogwTemplate(w, r, tmpl_cat_cat, sctgs)
         }
 
@@ -2579,9 +2437,11 @@ var(
                 vars := mux.Vars(r)
                 ctg,_ := vars["category"]
                 sctg,_ := vars["subcategory"]
-                //handle(err)
                 gds, err := getGds(c,ctg,sctg)
-                handle(err)
+                if err != nil {
+                        handleNotFound(c, w, r)
+                        return
+                }
                 handleCatalogwTemplate(w, r, tmpl_cat_sub_cat, gds)
         }
 
@@ -2697,6 +2557,31 @@ var(
         }
 
 // root handler & makeHandler
+        func handleNotFound(c appengine.Context, w http.ResponseWriter, r *http.Request) {
+                var s0 []Good
+                var c0 []Category
+                c0, err := getCategories(c)
+                if err != nil {
+                        c0  = dflt_ctgrs
+                        c.Infof("Couldn't load categories, default categories used")
+                }
+                cs, err := getCstmr(c, "Guest")
+                if err != nil {
+                        cs  = dflt_cstmr
+                        c.Infof("Couldn't load customer, default customer used")
+                }
+                session, err := ckstore.Get(r, "root_path")
+                handle(err)
+                session.Values["lggd"] = "Guest"
+                session.Save(r, w)
+                data := Render{"404 Nothing to see here", cs, s0,c0}
+                err = tmpl_cmn.ExecuteTemplate(w, "base", data)
+                if err != nil {
+                        c.Infof("Couldn't execute common NotFound template", err)
+                }
+                return
+        }
+
         func handleRoot(w http.ResponseWriter, r *http.Request) {
                 //c := appengine.NewContext(r)
                 session, err := ckstore.Get(r, "root_path")
@@ -2711,6 +2596,10 @@ var(
                                         Path:"/",
                                 }
                 vars := mux.Vars(r)
+                if vars == nil {
+                        http.Redirect(w, r, "/account/login", 307)
+                        return
+                }
                 switch vars["page"] {
                         case "":
                                 http.Redirect(w, r, "/account/login", 307)
@@ -2728,7 +2617,7 @@ var(
                 }
         }
         func makeHandler(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc{
-                return func(w http.ResponseWriter, r *http.Request) { 
+                return func(w http.ResponseWriter, r *http.Request) {
                         m := validPath.FindStringSubmatch(r.URL.Path)
                         if m == nil {
                                 http.NotFound(w,r)
@@ -2741,6 +2630,7 @@ var(
 // init
         func init() {
                 r := mux.NewRouter()
+                r.HandleFunc("/", makeHandler(handleRoot)).Methods("GET")
                 r.HandleFunc("/{page}", makeHandler(handleRoot)).Methods("GET")
                 s := r.PathPrefix("/admin").Subrouter()
                 //s.HandleFunc("/", makeHandler(handleGoods)).Methods("GET")
@@ -2980,13 +2870,13 @@ var(
                 var ctgrs []Category
                 var sctgrs []string
                 key, err := q.GetAll(c, &ctgrs)
-                if key != nil {
-                        return ctgrs[0].Subcategories, nil
-                }
                 if err != nil {
                         return sctgrs, err
                 }
-                return sctgrs, nil
+                if key != nil {
+                        return ctgrs[0].Subcategories, nil
+                }
+                return sctgrs, errors.New("No such category")
         }
 
         func getGds(c appengine.Context, ctgry string, sctgry string) ([]Good, error) {
@@ -2999,7 +2889,7 @@ var(
                 if err != nil {
                         return gds, err
                 }
-                return gds, nil
+                return gds, errors.New("No such category")
         }
 
         func getSctgryGds(c appengine.Context, sctgrys []string) ([]Good, error) {
@@ -3419,13 +3309,13 @@ var(
 // error handlers
         func handle(err error) {
                 if err != nil {
-                        log.Println("Error: %v", err)
+                        log.Println("Error: ", err)
                 }
         }
 
         func hndl(err error, fnctn string) {
                 if err != nil {
-                        log.Println("Error in %v: %v", fnctn, err)
+                        log.Println("Error in ", fnctn, err)
                 }
         }
 

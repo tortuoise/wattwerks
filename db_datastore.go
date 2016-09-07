@@ -4,7 +4,7 @@ import (
         "appengine"
         "appengine/datastore"
         "fmt"
-        "log"
+        _"log"
         "reflect"
         "time"
         _"golang.org/x/net/context"
@@ -145,7 +145,6 @@ func (ds *DS) AddwParent(parent interface{}, child interface{}, offset int64) (e
         }
 
         pv := reflect.ValueOf(parent).Elem().Field(0).Interface().(int64)
-        log.Println(pv)
         pk := ds.dsKey(pt, pv)
         ck := ds.dsChildKey(reflect.TypeOf(child).Elem(), pv + offset, pk)
 
@@ -154,7 +153,7 @@ func (ds *DS) AddwParent(parent interface{}, child interface{}, offset int64) (e
         }
         pk, err := datastore.Put(c, pk, parent)
         if err != nil {
-                return DSErr{When: time.Now(), What: "Add w parent error: during parent put",}
+                return DSErr{When: time.Now(), What: "Add w parent error: during parent put"+ err.Error(),}
         }
         if pk != nil {
                 _, err := datastore.Put(c, ck, child)
